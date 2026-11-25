@@ -1,0 +1,157 @@
+:root{
+  --markaz-page-max:1500px;
+  --markaz-content-gutter:clamp(14px,2.2vw,34px);
+  --markaz-mobile-bottom:calc(88px + env(safe-area-inset-bottom,0px));
+}
+html,body{width:100%;min-height:100%;max-width:100%;overflow-x:hidden}
+body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+#root{width:100%;min-height:100svh;overflow-x:clip}
+#root>.ios-app-shell{width:100%;min-height:100svh;box-sizing:border-box;padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+#root>.ios-app-shell>main.relative.flex-1.overflow-hidden{
+  min-width:0;min-height:0;overflow-x:clip!important;overflow-y:auto!important;
+  overscroll-behavior-y:contain;scrollbar-gutter:stable;
+}
+#root main{width:100%;min-width:0;box-sizing:border-box}
+#root main img,#root main video,#root main canvas,#root main svg{max-width:100%}
+#root main iframe{max-width:100%;border:0}
+#root main table{max-width:100%;border-collapse:separate}
+#root main input,#root main textarea,#root main select{max-width:100%;min-width:0}
+#root main :where(h1,h2,h3,h4,p,span,button,a,label){overflow-wrap:anywhere}
+#root main button,#root main a{touch-action:manipulation}
+#root main>div[class*="max-w-4xl"]{max-width:min(1280px,100%)!important}
+#root main>div[class*="max-w-5xl"]{max-width:min(1480px,100%)!important}
+#root main.mx-auto[class*="max-w-3xl"]{max-width:min(1120px,calc(100% - 48px))!important}
+#root main.mx-auto[class*="max-w-4xl"]{max-width:min(1320px,calc(100% - 48px))!important}
+#root main.mx-auto[class*="max-w-5xl"]{max-width:min(1480px,calc(100% - 48px))!important}
+#root main.mx-auto[class*="max-w-6xl"]{max-width:min(1600px,calc(100% - 48px))!important}
+#root main.relative.flex-1.overflow-hidden>div.relative.mx-auto{
+  width:min(calc(100% - 40px),1500px)!important;max-width:1500px!important;
+}
+.ios-glass-dock{max-width:calc(100vw - 32px);}
+
+/* Game catalog: wider on desktop, tidy on tablets and phones. */
+#root main.markaz-games-list-page{
+  width:min(calc(100% - 48px),1560px)!important;max-width:1560px!important;
+  margin-inline:auto!important;min-width:0;min-height:calc(100svh - 170px);
+  padding:clamp(16px,2.2vw,34px) 0 44px!important;
+}
+#root main.markaz-games-list-page .markaz-games-tabs{
+  display:flex;flex-wrap:wrap;align-items:center;gap:7px;
+}
+#root main.markaz-games-list-page section .grid{align-items:stretch}
+#root main.markaz-games-list-page section .grid>div{min-width:0;height:100%}
+#root main.markaz-games-list-page section .grid>div button{min-height:44px}
+
+/* All selected games share a proper, flexible stage on PC and mobile. */
+#root>.ios-app-shell:has(main.markaz-game-page){padding-bottom:0!important;min-height:100svh}
+#root:has(main.markaz-game-page) .ios-glass-dock{display:none!important}
+#root main.markaz-game-page{
+  display:flex;flex-direction:column;gap:12px;flex:1 1 auto;min-height:0;
+  width:min(calc(100% - 48px),1600px)!important;max-width:1600px!important;
+  margin-inline:auto!important;padding:16px 0 24px!important;overflow:visible!important;
+}
+#root main.markaz-game-page>button{flex:0 0 auto;align-self:flex-start;min-height:40px;padding:8px 12px}
+#root main.markaz-game-page .markaz-game-frame{
+  display:flex;flex:1 1 auto;flex-direction:column;min-width:0;min-height:clamp(480px,calc(100svh - 180px),920px);
+  width:100%;max-width:100%;border-radius:24px;
+}
+#root main.markaz-game-page .markaz-game-frame>*{width:100%;min-width:0;min-height:0;flex:1 1 auto}
+#root main.markaz-game-page :where(.max-w-3xl,.max-w-4xl,.max-w-5xl){max-width:min(100%,1280px)!important}
+
+/* Duck Race: use the available stage height, not a hard-coded viewport subtraction. */
+#root main.markaz-game-page .markaz-duck-race-root{
+  width:100%;height:100%;min-height:0;max-height:none;flex:1 1 auto;overflow:hidden;
+}
+#root main.markaz-game-page .markaz-duck-race-root>div{min-width:0;max-width:100%}
+#root main.markaz-game-page .markaz-duck-race-root [class*="max-w-md"]{max-width:min(100%,760px)}
+#root main.markaz-game-page .markaz-duck-race-root [class*="max-w-xl"]{max-width:min(100%,920px)}
+
+/* Pacuan Santri: keep the game at 16:9 and scale it to the actual free viewport. */
+#root main.markaz-game-page .markaz-pacuan-root{
+  display:flex;flex-direction:column;flex:1 1 auto;min-width:0;min-height:0;width:100%;height:100%;
+}
+#root main.markaz-game-page .markaz-pacuan-stage{
+  display:flex;align-items:center;justify-content:center;flex:0 1 auto;
+  width:min(100%,calc((100svh - 180px)*1.7777778))!important;
+  height:min(calc(100svh - 180px),calc((100vw - 60px)*.5625))!important;
+  max-height:none!important;aspect-ratio:16/9;margin:0 auto;min-height:0;
+}
+#root main.markaz-game-page .markaz-pacuan-stage iframe{display:block;width:100%;height:100%;min-height:0;background:#10261a}
+#root main.markaz-game-page .markaz-pacuan-fullscreen{
+  position:fixed!important;inset:0!important;z-index:100!important;width:100vw!important;height:100svh!important;
+  max-width:none!important;max-height:none!important;border-radius:0!important;
+}
+#root main.markaz-game-page .markaz-pacuan-stage-fullscreen{
+  width:100%!important;height:auto!important;max-width:none!important;max-height:none!important;
+  flex:1 1 auto!important;aspect-ratio:auto!important;margin:0!important;
+}
+#root main.markaz-game-page .markaz-pacuan-stage-fullscreen iframe{width:100%;height:100%}
+
+/* Tablet. */
+@media (min-width:641px) and (max-width:1024px){
+  #root>.ios-app-shell{padding-bottom:92px}
+  #root main.relative.flex-1.overflow-hidden>div.relative.mx-auto{width:calc(100% - 36px)!important}
+  #root main.markaz-games-list-page{width:calc(100% - 36px)!important;padding-top:22px!important}
+  #root main.markaz-game-page{width:calc(100% - 28px)!important;padding-top:12px!important}
+  #root main.markaz-game-page .markaz-game-frame{min-height:clamp(430px,calc(100svh - 170px),760px)}
+  .ios-glass-dock{max-width:calc(100vw - 28px);padding:7px 8px}
+  .ios-glass-item{min-width:64px;padding-inline:8px}
+}
+
+/* Phone. */
+@media (max-width:640px){
+  #root>.ios-app-shell{padding-bottom:var(--markaz-mobile-bottom)}
+  #root>.ios-app-shell>main.relative.flex-1.overflow-hidden{scrollbar-gutter:auto}
+  #root main.relative.flex-1.overflow-hidden>div.relative.mx-auto{
+    width:calc(100% - 24px)!important;max-width:100%!important;
+    min-height:calc(100svh - 9rem)!important;padding-top:22px!important;padding-bottom:30px!important;
+  }
+  #root main>div[class*="max-w-4xl"],#root main>div[class*="max-w-5xl"]{padding-inline:12px!important}
+  #root main.markaz-games-list-page{width:100%!important;max-width:100%!important;padding:14px 12px 30px!important;min-height:calc(100svh - 150px)}
+  #root main.markaz-games-list-page .markaz-games-tabs{
+    flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;white-space:nowrap;
+    margin-inline:-2px;padding:12px 2px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  }
+  #root main.markaz-games-list-page .markaz-games-tabs::-webkit-scrollbar{display:none}
+  #root main.markaz-games-list-page .markaz-games-tabs button{flex:0 0 auto;min-height:40px;white-space:nowrap}
+  #root main.markaz-games-list-page section{margin-top:24px}
+  #root main.markaz-games-list-page section .grid{grid-template-columns:minmax(0,1fr)!important;gap:12px}
+  #root main.markaz-games-list-page section .grid>div{padding:18px!important;border-radius:22px}
+  #root main.markaz-game-page{
+    width:100%!important;max-width:100%!important;margin:0!important;
+    min-height:calc(100svh - 62px);padding:9px 10px 14px!important;gap:9px;
+  }
+  #root main.markaz-game-page>button{min-height:38px;font-size:11px}
+  #root main.markaz-game-page .markaz-game-frame{min-height:calc(100svh - 132px);border-radius:18px}
+  #root main.markaz-game-page .markaz-duck-race-root{height:100%;min-height:0}
+  #root main.markaz-game-page .markaz-pacuan-stage{
+    width:100%!important;height:auto!important;aspect-ratio:16/9!important;
+    max-height:calc(100svh - 160px)!important;
+  }
+  #root main.markaz-game-page .markaz-pacuan-fullscreen{height:100svh!important}
+  #root main.markaz-game-page .markaz-pacuan-stage-fullscreen{height:auto!important;max-height:none!important}
+  @media (orientation:landscape){
+    #root main.markaz-game-page .markaz-pacuan-stage{
+      width:min(100%,calc((100svh - 110px)*1.7777778))!important;
+      height:min(calc(100svh - 110px),calc(100vw*.5625))!important;
+    }
+  }
+  .ios-glass-dock{width:calc(100vw - 16px);max-width:460px;bottom:max(7px,env(safe-area-inset-bottom));padding:6px 4px}
+  .ios-glass-dock-inner{width:100%;gap:1px;justify-content:space-around}
+  .ios-glass-item{flex:1;min-width:0;height:53px;padding:4px 1px;gap:3px;font-size:9px;border-radius:15px}
+  .ios-glass-item svg{width:20px;height:20px}
+  #root main :where(input,select,textarea){font-size:16px}
+}
+@media (max-width:380px){
+  #root main.markaz-games-list-page section .grid>div{padding:15px!important}
+  #root main.markaz-game-page{padding-inline:7px!important}
+  .ios-glass-item span{font-size:8px}
+}
+@media (min-width:1440px){
+  #root main.relative.flex-1.overflow-hidden>div.relative.mx-auto{width:min(calc(100% - 64px),1600px)!important;max-width:1600px!important}
+  #root main.markaz-games-list-page{width:min(calc(100% - 64px),1680px)!important;max-width:1680px!important}
+  #root main.markaz-game-page{width:min(calc(100% - 64px),1720px)!important;max-width:1720px!important}
+}
+@media (prefers-reduced-motion:reduce){
+  #root main.markaz-game-page *,#root main.markaz-games-list-page *{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}
+}

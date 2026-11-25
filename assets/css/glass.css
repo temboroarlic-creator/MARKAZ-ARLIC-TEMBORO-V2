@@ -1,0 +1,174 @@
+:root{
+  --radius:1.1rem;
+  --background:oklch(97.2% .016 158);
+  --foreground:oklch(24% .035 165);
+  --card:oklch(99.4% .008 158);
+  --card-foreground:oklch(24% .035 165);
+  --popover:oklch(99.5% .008 158);
+  --popover-foreground:oklch(24% .035 165);
+  --primary:oklch(42% .105 160);
+  --primary-foreground:oklch(99% .006 158);
+  --secondary:oklch(93.5% .025 158);
+  --secondary-foreground:oklch(31% .06 160);
+  --muted:oklch(94.5% .018 158);
+  --muted-foreground:oklch(48% .035 165);
+  --accent:oklch(92.5% .035 158);
+  --accent-foreground:oklch(31% .06 160);
+  --border:oklch(88% .025 158);
+  --input:oklch(87% .03 158);
+  --ring:oklch(58% .09 160);
+  --gold:oklch(68% .13 78);
+}
+html{scroll-behavior:smooth;background:#edf5ef}
+body{
+  min-width:320px;
+  background:
+    radial-gradient(ellipse at 8% 2%,rgba(115,190,151,.24),transparent 34rem),
+    radial-gradient(ellipse at 92% 18%,rgba(173,211,190,.27),transparent 36rem),
+    linear-gradient(145deg,#f4f9f5 0%,#eaf3ed 48%,#f8faf8 100%) !important;
+  background-attachment:fixed !important;
+  font-family:"Plus Jakarta Sans",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif !important;
+}
+#root{min-height:100vh}
+#root>.ios-app-shell{
+  position:relative;isolation:isolate;min-height:100vh;
+  padding-bottom:104px;
+  background:
+    radial-gradient(ellipse at 12% 4%,rgba(116,190,154,.19),transparent 32rem),
+    radial-gradient(ellipse at 88% 28%,rgba(197,224,207,.26),transparent 36rem),
+    linear-gradient(145deg,#f3f8f4 0%,#eaf2ed 52%,#f8faf8 100%) !important;
+}
+#root>.ios-app-shell:before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.18;
+  background-image:radial-gradient(rgba(30,92,62,.19) .65px,transparent .65px);
+  background-size:18px 18px;
+}
+/* iOS-like translucent top bar */
+#root header.sticky{
+  z-index:45 !important;
+  background:rgba(248,252,249,.72) !important;
+  border-bottom:1px solid rgba(255,255,255,.88) !important;
+  box-shadow:0 9px 32px rgba(24,75,48,.075),inset 0 1px rgba(255,255,255,.96) !important;
+  -webkit-backdrop-filter:blur(28px) saturate(185%) !important;
+  backdrop-filter:blur(28px) saturate(185%) !important;
+}
+#root header.sticky>div{
+  max-width:min(1440px,100%) !important;
+  height:72px !important;
+  padding-inline:clamp(14px,3vw,42px) !important;
+}
+#root header.sticky img{filter:drop-shadow(0 4px 9px rgba(23,93,59,.15))}
+#root header.sticky button{
+  border-radius:14px;
+  transition:background .22s ease,color .22s ease,transform .22s ease,box-shadow .22s ease;
+}
+#root header.sticky button:hover{transform:translateY(-1px)}
+#root header.sticky button[aria-label="Buka menu"]{
+  background:rgba(255,255,255,.52);
+  border:1px solid rgba(255,255,255,.82);
+  box-shadow:0 3px 12px rgba(29,83,55,.06),inset 0 1px rgba(255,255,255,.9);
+}
+/* Softer photographic hero with a light glass wash */
+#root main.ios-home-hero{isolation:isolate}
+#root main.relative.flex-1.overflow-hidden>img[aria-hidden="true"]{
+  opacity:.2 !important;filter:saturate(.72) contrast(.92) brightness(1.08) !important;
+  transform:scale(1.025);
+}
+#root main.relative.flex-1.overflow-hidden>div.absolute.inset-0{
+  background:linear-gradient(180deg,rgba(242,249,244,.77),rgba(237,247,240,.84) 48%,rgba(248,251,248,.96)) !important;
+  -webkit-backdrop-filter:blur(17px) saturate(130%) !important;
+  backdrop-filter:blur(17px) saturate(130%) !important;
+}
+#root main{width:100%;}
+#root main>div[class*="max-w-4xl"]{max-width: min(1160px,100%) !important}
+#root main>div[class*="max-w-5xl"]{max-width: min(1320px,100%) !important}
+/* Real content cards across every route */
+#root main [class*="bg-card"],
+#root main [class*="bg-popover"]{
+  background-color:rgba(255,255,255,.62) !important;
+  border-color:rgba(255,255,255,.9) !important;
+  -webkit-backdrop-filter:blur(22px) saturate(165%) !important;
+  backdrop-filter:blur(22px) saturate(165%) !important;
+  box-shadow:0 14px 38px rgba(27,78,49,.075),0 2px 8px rgba(27,78,49,.035),inset 0 1px rgba(255,255,255,.92) !important;
+}
+#root main button[class*="rounded-3xl"],
+#root main [class*="rounded-3xl"][class*="bg-card"]{
+  border-radius:26px !important;
+}
+#root main button[class*="rounded-3xl"]{
+  transition:transform .24s cubic-bezier(.2,.8,.2,1),box-shadow .24s ease,border-color .24s ease !important;
+}
+#root main button[class*="rounded-3xl"]:hover{
+  transform:translateY(-3px);
+  box-shadow:0 22px 48px rgba(25,82,51,.12),inset 0 1px rgba(255,255,255,.96) !important;
+}
+#root main [class*="border-border"]{border-color:rgba(255,255,255,.82) !important}
+#root main input,
+#root main textarea,
+#root main select{
+  border-color:rgba(255,255,255,.94) !important;
+  background:rgba(255,255,255,.7) !important;
+  box-shadow:inset 0 1px 2px rgba(33,81,54,.035),0 4px 14px rgba(33,81,54,.035) !important;
+  -webkit-backdrop-filter:blur(16px) !important;backdrop-filter:blur(16px) !important;
+}
+#root main button:focus-visible,#root header button:focus-visible{
+  outline:3px solid rgba(41,130,88,.28) !important;outline-offset:3px;
+}
+#root main svg{flex-shrink:0}
+#root aside[aria-label="Daftar Isi"]{
+  background:rgba(246,251,247,.88) !important;
+  border-right:1px solid rgba(255,255,255,.92) !important;
+  box-shadow:22px 0 72px rgba(22,69,43,.17) !important;
+  -webkit-backdrop-filter:blur(30px) saturate(175%) !important;
+  backdrop-filter:blur(30px) saturate(175%) !important;
+}
+#root footer{
+  background:rgba(248,252,249,.62) !important;
+  border-color:rgba(255,255,255,.9) !important;
+  -webkit-backdrop-filter:blur(22px) saturate(160%) !important;
+  backdrop-filter:blur(22px) saturate(160%) !important;
+}
+/* Floating Liquid Glass navigation, wired to the app's React navigation */
+.ios-glass-dock{
+  position:fixed;z-index:70;left:50%;bottom:max(17px,env(safe-area-inset-bottom));
+  transform:translateX(-50%);width:max-content;max-width:calc(100vw - 28px);
+  padding:9px 10px;border:1px solid rgba(255,255,255,.9);border-radius:25px;
+  background:rgba(248,252,249,.69);
+  box-shadow:0 18px 48px rgba(25,75,48,.17),0 3px 10px rgba(25,75,48,.06),inset 0 1px rgba(255,255,255,.98);
+  -webkit-backdrop-filter:blur(30px) saturate(190%);
+  backdrop-filter:blur(30px) saturate(190%);
+}
+.ios-glass-dock-inner{display:flex;align-items:center;justify-content:center;gap:6px}
+.ios-glass-item{
+  appearance:none;min-width:76px;height:60px;padding:7px 12px;border:0;border-radius:18px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  color:#61776a;background:transparent;cursor:pointer;
+  font:600 10px/1.1 "Plus Jakarta Sans",system-ui,sans-serif;
+  transition:background .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.ios-glass-item svg{width:23px;height:23px;display:block}
+.ios-glass-item span{white-space:nowrap;letter-spacing:.005em}
+.ios-glass-item:hover{background:rgba(255,255,255,.68);color:#176444;transform:translateY(-1px)}
+.ios-glass-item:active{transform:scale(.94)}
+.ios-glass-item.active{
+  color:#176444;background:rgba(220,241,228,.86);
+  box-shadow:inset 0 1px rgba(255,255,255,.98),0 4px 12px rgba(25,100,63,.09);
+}
+.ios-glass-item:focus-visible{outline:2px solid rgba(33,125,78,.42);outline-offset:2px}
+@media(max-width:640px){
+  #root>.ios-app-shell{padding-bottom:92px}
+  #root header.sticky>div{height:62px !important;padding-inline:12px !important}
+  #root main>div[class*="max-w-4xl"],#root main>div[class*="max-w-5xl"]{padding-inline:16px !important}
+  #root main.relative.flex-1.overflow-hidden>div.relative.mx-auto{min-height:calc(100svh - 9rem) !important;padding-top:30px !important;padding-bottom:36px !important}
+  .ios-glass-dock{width:calc(100vw - 20px);max-width:460px;bottom:max(9px,env(safe-area-inset-bottom));padding:7px 5px;border-radius:23px}
+  .ios-glass-dock-inner{width:100%;gap:1px;justify-content:space-around}
+  .ios-glass-item{flex:1;min-width:0;height:55px;padding:5px 1px;gap:3px;font-size:9px;border-radius:16px}
+  .ios-glass-item svg{width:21px;height:21px}
+}
+@media(min-width:641px){
+  #root main.relative.flex-1.overflow-hidden>div.relative.mx-auto{max-width:1160px !important}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{scroll-behavior:auto !important;transition:none !important;animation:none !important}
+}

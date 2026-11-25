@@ -1,0 +1,121 @@
+:root{
+  --ios-ease:cubic-bezier(.22,1,.36,1);
+  --ios-spring:cubic-bezier(.2,.85,.25,1);
+}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+::selection{background:rgba(54,139,91,.2);color:#174d35}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:rgba(225,239,229,.42)}
+::-webkit-scrollbar-thumb{background:rgba(76,133,99,.3);border:3px solid transparent;border-radius:99px;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:rgba(54,116,79,.48);border:3px solid transparent;background-clip:padding-box}
+
+/* Soft page transitions */
+#root main.ios-page-enter{animation:iosPageEnter .62s var(--ios-ease) both}
+@keyframes iosPageEnter{
+  from{opacity:0;transform:translate3d(0,12px,0) scale(.994);filter:blur(3px)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+}
+#root main.ios-page-enter> :not(img):not([aria-hidden="true"]){
+  animation:iosContentRise .56s var(--ios-ease) both;
+}
+#root main.ios-page-enter> :nth-child(2){animation-delay:.035s}
+#root main.ios-page-enter> :nth-child(3){animation-delay:.075s}
+#root main.ios-page-enter> :nth-child(4){animation-delay:.115s}
+#root main.ios-page-enter [class*="grid"]> :nth-child(1){animation:iosCardRise .62s var(--ios-ease) .07s both}
+#root main.ios-page-enter [class*="grid"]> :nth-child(2){animation:iosCardRise .62s var(--ios-ease) .12s both}
+#root main.ios-page-enter [class*="grid"]> :nth-child(3){animation:iosCardRise .62s var(--ios-ease) .17s both}
+#root main.ios-page-enter [class*="grid"]> :nth-child(4){animation:iosCardRise .62s var(--ios-ease) .22s both}
+#root main.ios-page-enter [class*="grid"]> :nth-child(5){animation:iosCardRise .62s var(--ios-ease) .27s both}
+@keyframes iosContentRise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes iosCardRise{from{opacity:0;transform:translateY(15px) scale(.986);filter:blur(1.5px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+
+/* Slow light sweep on the glass header */
+#root header.sticky{transition:background .4s var(--ios-ease),box-shadow .4s var(--ios-ease),border-color .4s ease}
+#root header.sticky:after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(112deg,transparent 20%,rgba(255,255,255,.42) 48%,transparent 72%);
+  transform:translateX(-125%);opacity:0;animation:iosHeaderSheen 14s var(--ios-ease) infinite;
+}
+@keyframes iosHeaderSheen{0%,58%{transform:translateX(-125%);opacity:0}66%{opacity:.48}86%,100%{transform:translateX(125%);opacity:0}}
+#root header button{transition:all .32s var(--ios-ease)}
+#root header button:active{scale:.95}
+
+/* Soft depth and pointer-responsive light on cards */
+#root main [class*="bg-card"]:not([class*="bg-gradient"]){
+  background-image:
+    radial-gradient(circle at var(--ios-glow-x,50%) var(--ios-glow-y,0%),rgba(255,255,255,var(--ios-glow-opacity,.14)),transparent 45%),
+    linear-gradient(138deg,rgba(255,255,255,.18),rgba(255,255,255,0) 56%) !important;
+  transition:transform .42s var(--ios-spring),box-shadow .42s var(--ios-ease),border-color .36s ease,filter .36s ease !important;
+}
+#root main [class*="bg-card"][class*="rounded-3xl"],
+#root main button[class*="rounded-3xl"]{
+  transform-style:preserve-3d;backface-visibility:hidden;
+  --ios-tilt-x:0deg;--ios-tilt-y:0deg;--ios-lift:0px;--ios-scale:1;
+  transform:perspective(1200px) rotateX(var(--ios-tilt-y)) rotateY(var(--ios-tilt-x)) translateY(var(--ios-lift)) scale(var(--ios-scale));
+}
+@media(hover:hover) and (pointer:fine){
+  #root main [class*="bg-card"][class*="rounded-3xl"]:hover,
+  #root main button[class*="rounded-3xl"]:hover{
+    --ios-lift:-3px;--ios-scale:1.004;--ios-glow-opacity:.42;
+    border-color:rgba(88,157,112,.44) !important;
+    box-shadow:0 21px 48px rgba(28,85,51,.12),0 4px 12px rgba(28,85,51,.05),inset 0 1px rgba(255,255,255,.96) !important;
+  }
+}
+#root main button[class*="rounded-3xl"]:active,
+#root main [class*="bg-card"][class*="rounded-3xl"]:active{
+  --ios-lift:0px;--ios-scale:.985;transition-duration:.13s !important;
+}
+#root main svg{transition:transform .36s var(--ios-spring),filter .32s ease,color .28s ease}
+#root main button:not(.ios-glass-item),#root header button{
+  transition-property:color,background-color,border-color,box-shadow,transform,opacity,filter,scale;
+  transition-duration:.3s;transition-timing-function:var(--ios-ease);-webkit-tap-highlight-color:transparent;
+}
+#root main button:not(.ios-glass-item):active{scale:.98}
+#root main input,#root main textarea,#root main select{
+  transition:border-color .28s ease,box-shadow .32s var(--ios-ease),background-color .28s ease,transform .28s var(--ios-ease) !important;
+}
+#root main input:focus,#root main textarea:focus,#root main select:focus{
+  transform:translateY(-1px);
+  box-shadow:0 0 0 4px rgba(52,133,86,.1),0 7px 18px rgba(31,87,52,.055) !important;
+}
+
+/* Floating dock: gentle hover, springy active icon, moving reflection */
+.ios-glass-dock{isolation:isolate;animation:iosDockFloat 9s ease-in-out infinite;transition:box-shadow .4s var(--ios-ease),background .4s ease,border-color .4s ease}
+.ios-glass-dock:before{
+  content:"";position:absolute;z-index:0;pointer-events:none;top:1px;left:8%;width:46%;height:48%;
+  border-radius:999px;background:linear-gradient(110deg,transparent,rgba(255,255,255,.54),transparent);
+  filter:blur(8px);opacity:.58;transform:translateX(-145%) skewX(-18deg);animation:iosDockSheen 11s var(--ios-ease) infinite;
+}
+.ios-glass-dock-inner{position:relative;z-index:1}
+@keyframes iosDockSheen{0%,58%{transform:translateX(-145%) skewX(-18deg);opacity:0}66%{opacity:.62}88%,100%{transform:translateX(235%) skewX(-18deg);opacity:0}}
+@keyframes iosDockFloat{0%,100%{translate:0 0}50%{translate:0 -1.5px}}
+.ios-glass-item{position:relative;overflow:hidden;transition:background .3s var(--ios-ease),color .3s ease,transform .3s var(--ios-spring),box-shadow .3s var(--ios-ease)}
+.ios-glass-item:after{
+  content:"";position:absolute;inset:1px;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(145deg,rgba(255,255,255,.4),transparent 58%);opacity:0;transition:opacity .3s ease;
+}
+.ios-glass-item:hover:after,.ios-glass-item.active:after{opacity:.68}
+.ios-glass-item.active{transform:translateY(-1.5px) scale(1.01)}
+.ios-glass-item.active svg{animation:iosNavIconPop .42s var(--ios-spring) both}
+@keyframes iosNavIconPop{0%{transform:scale(.84) translateY(2px)}65%{transform:scale(1.09) translateY(-1px)}100%{transform:scale(1) translateY(0)}}
+.ios-glass-item:active{transform:scale(.96)}
+.ios-glass-item span,.ios-glass-item svg{position:relative;z-index:1}
+#root aside[aria-label="Daftar Isi"]{animation:iosDrawerIn .42s var(--ios-ease) both}
+@keyframes iosDrawerIn{from{opacity:0;transform:translateX(-14px);filter:blur(2px)}to{opacity:1;transform:translateX(0);filter:blur(0)}}
+
+@media(max-width:640px){
+  #root main.ios-page-enter{animation-duration:.5s}
+  #root main [class*="bg-card"][class*="rounded-3xl"],#root main button[class*="rounded-3xl"]{transform:none}
+  .ios-glass-dock{animation-duration:11s}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  #root header.sticky:after,.ios-glass-dock,.ios-glass-dock:before,#root main.ios-page-enter,
+  #root main.ios-page-enter> :not(img):not([aria-hidden="true"]),
+  #root main.ios-page-enter [class*="grid"]> *,
+  #root aside[aria-label="Daftar Isi"],.ios-glass-item.active svg{
+    animation:none !important;
+  }
+  *,*:before,*:after{transition-duration:.01ms !important;scroll-behavior:auto !important}
+}

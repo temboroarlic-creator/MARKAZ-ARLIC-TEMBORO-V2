@@ -1,0 +1,24 @@
+{
+  "versi": 1,
+  "catatan": "Urutan marhalah mengikuti urutan di sini. Ubah satu file marhalah saja bila ada koreksi.",
+  "kalimat": [
+    "tamhidi-1.json",
+    "tamhidi-2.json",
+    "mubtadi-1.json",
+    "mubtadi-2.json",
+    "mutawassith-1.json",
+    "mutawassith-2.json",
+    "mutaqodim-1.json",
+    "mutaqodim-2.json"
+  ],
+  "nash": [
+    "tamhidi-1.json",
+    "tamhidi-2.json",
+    "mubtadi-1.json",
+    "mubtadi-2.json",
+    "mutawassith-1.json",
+    "mutawassith-2.json",
+    "mutaqodim-1.json",
+    "mutaqodim-2.json"
+  ]
+}

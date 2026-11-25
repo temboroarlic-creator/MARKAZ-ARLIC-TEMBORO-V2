@@ -1,0 +1,13 @@
+html.arlic-locked, html.arlic-locked body { overflow:hidden !important; }
+  html.arlic-locked #root { visibility:hidden !important; }
+  #arlic-login-screen{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 20% 15%,#d6f5df 0,#f3fff5 35%,#e4f2e9 100%);font-family:"Plus Jakarta Sans",Arial,sans-serif;color:#173c2b}
+  #arlic-login-screen[hidden]{display:none}
+  #arlic-login-screen .login-card{width:min(420px,100%);padding:30px 26px;background:#fff;border:1px solid #d7e8dc;border-radius:24px;box-shadow:0 22px 70px #174c2b20;text-align:center}
+  #arlic-login-screen .login-mark{width:66px;height:66px;margin:0 auto 14px;display:grid;place-items:center;border-radius:20px;background:#176444;color:white;font-size:30px}
+  #arlic-login-screen h1{font-size:22px;margin:0 0 6px;font-weight:900}
+  #arlic-login-screen p{font-size:12px;color:#688072;margin:0 0 22px}
+  #arlic-login-screen label{display:block;text-align:left;font-size:11px;font-weight:800;margin:12px 0 6px}
+  #arlic-login-screen input{width:100%;padding:13px 14px;border:1px solid #cbded0;border-radius:11px;background:#fbfefb;color:#173c2b;outline:none;font-size:14px}
+  #arlic-login-screen input:focus{border-color:#278457;box-shadow:0 0 0 3px #27845720}
+  #arlic-login-screen button{width:100%;margin-top:18px;border:0;border-radius:11px;padding:13px;background:#176444;color:white;font-weight:900;font-size:13px;cursor:pointer}
+  #arlic-login-error{min-height:16px;margin-top:10px;color:#c0392b;font-size:11px;font-weight:700}

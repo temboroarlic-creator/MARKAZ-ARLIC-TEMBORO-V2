@@ -1,0 +1,27 @@
+{
+  "_petunjuk": "Tambah buku: unggah PDF ke folder books/, lalu tambahkan satu objek di daftar 'books'. Lihat books/README.md.",
+  "settings": {
+    "title": "Kumpulan Referensi Mengajar",
+    "description": "Pusat bahan ajar, modul, buku, dan referensi pembelajaran Markaz Lughoh Temboro.",
+    "layout": "grid",
+    "githubRepo": ""
+  },
+  "categories": [
+    "Buku Pelajaran",
+    "Modul",
+    "Referensi Guru"
+  ],
+  "_contoh": {
+    "id": "nahwu-wadhih-1",
+    "title": "Nahwu Wadhih Jilid 1",
+    "description": "Ringkasan isi buku.",
+    "category": "Buku Pelajaran",
+    "marhalah": "Mubtadi 1",
+    "subject": "Nahwu",
+    "file": "books/nahwu-wadhih-1.pdf",
+    "cover": "",
+    "featured": false,
+    "order": 1
+  },
+  "books": []
+}
