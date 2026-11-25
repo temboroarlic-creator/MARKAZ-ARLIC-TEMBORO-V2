@@ -75,9 +75,8 @@ html[data-tema]:not([data-tema="kaca"]) .ios-glass-item span{white-space:nowrap}
 html[data-tema]:not([data-tema="kaca"]) .ios-glass-item.active{color:var(--primary);background:color-mix(in oklab,var(--primary) 13%,transparent)}
 html[data-tema]:not([data-tema="kaca"]) .ios-glass-item:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
 
-/* Perpustakaan Referensi: panel dibuat solid (tanpa blur teks di belakang tidak tembus) */
+/* Perpustakaan Referensi (mode halaman): latar solid pada tema non-kaca */
 html[data-tema]:not([data-tema="kaca"]) .mdl-window{background:#f7fbf8!important}
-html[data-tema]:not([data-tema="kaca"]) .mdl-backdrop{background:rgba(10,30,19,.5)!important}
 
 /* ---- Panel pengaturan tampilan ---- */
 .mz-tema-fab{position:fixed;top:max(10px,env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));z-index:2147483647;

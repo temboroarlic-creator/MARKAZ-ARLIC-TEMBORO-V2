@@ -2,7 +2,15 @@
 
 Letakkan file PDF di folder ini, lalu daftarkan di `data/books.json`.
 
-## Cara menambah buku
+## Dari Google Drive (tanpa unggah ke GitHub)
+1. Di Drive: titik tiga pada file → **Bagikan** → akses **Siapa saja yang memiliki link**.
+2. Tambahkan satu blok di `data/books.json` (cukup tempel link atau ID file di `drive`):
+```json
+{ "title": "Judul Buku", "category": "Referensi Guru", "drive": "https://drive.google.com/file/d/ID_FILE/view", "type": "pdf" }
+```
+`type` boleh `pdf` atau `pptx`. Buku dari Drive butuh internet (tidak bisa dibaca offline).
+
+## Cara menambah buku (PDF di GitHub)
 1. Unggah file PDF ke folder `books/` (contoh: `books/nahwu-wadhih-1.pdf`).
    Gunakan nama file tanpa spasi (pakai tanda `-`).
 2. Buka `data/books.json`, lalu tambahkan satu blok ke dalam daftar `"books"`:

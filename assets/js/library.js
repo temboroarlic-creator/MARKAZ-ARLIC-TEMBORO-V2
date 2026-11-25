@@ -62,19 +62,24 @@
       return items;
     }catch(e){return [];}
   }
+  function driveId(v){
+    if(!v)return "";const s=String(v).trim();
+    const m=s.match(/\/d\/([A-Za-z0-9_-]{10,})/)||s.match(/[?&]id=([A-Za-z0-9_-]{10,})/);
+    return m?m[1]:(/^[A-Za-z0-9_-]{10,}$/.test(s)?s:"");
+  }
   async function loadStatic(){
     const res=await fetch("data/books.json",{cache:"no-cache"});
     if(!res.ok)throw new Error("File data/books.json tidak ditemukan.");
     const j=await res.json();
     if(j.settings)settings={...settings,...j.settings};
     const baseName=p=>decodeURIComponent(String(p||"").split("/").pop()).toLowerCase();
-    const list=(j.books||[]).filter(b=>b&&b.file&&b.published!==false).map((b,i)=>({
-      id:b.id||slugify(b.title||b.file)||("buku-"+i),
-      title:b.title||decodeURIComponent(String(b.file).split("/").pop()).replace(/\.pdf$/i,"").replace(/[_-]+/g," "),
+    const list=(j.books||[]).filter(b=>b&&(b.file||b.drive)&&b.published!==false).map((b,i)=>({
+      id:b.id||slugify(b.title||b.file||b.drive)||("buku-"+i),
+      title:b.title||decodeURIComponent(String(b.file||("Buku "+(i+1))).split("/").pop()).replace(/\.pdf$/i,"").replace(/[_-]+/g," "),
       description:b.description||"",
       category_id:slugify(b.category||"Umum")||"umum",category:{name:b.category||"Umum"},
       marhalah:b.marhalah||"",subject:b.subject||"",cover_url:b.cover||"",
-      file_path:b.file,file_size:Number(b.size)||0,is_featured:!!b.featured,sort_order:Number(b.order)||0,
+      file_path:b.file||"",drive_id:driveId(b.drive),ftype:String(b.type||String(b.file||"pdf").split(".").pop()||"pdf").toLowerCase(),file_size:Number(b.size)||0,is_featured:!!b.featured,sort_order:Number(b.order)||0,
       status:"published",created_at:b.date||""
     }));
     const known=new Set(list.map(r=>baseName(r.file_path)));
@@ -110,13 +115,23 @@
   function openLibrary(){
     ensureShell();activeView="public";activeCategory="all";searchTerm="";
     const el=$("#mdl-backdrop");el.hidden=false;document.body.style.overflow="hidden";
-    requestAnimationFrame(()=>el.classList.add("mdl-open"));
+    document.documentElement.classList.add("mdl-page-open");placePage();
+    requestAnimationFrame(()=>{el.classList.add("mdl-open");placePage();});
     renderPublic();
+  }
+  // Mode halaman: area Referensi berada di antara header aplikasi dan menu bawah (keduanya tetap terlihat).
+  function placePage(){
+    const el=$("#mdl-backdrop");if(!el)return;
+    const hdr=$("header.sticky",ROOT),dock=$(".ios-glass-dock",ROOT);
+    const top=hdr?Math.max(0,Math.round(hdr.getBoundingClientRect().bottom)):0;
+    const bottom=dock?Math.max(0,Math.round(window.innerHeight-dock.getBoundingClientRect().top)):0;
+    el.style.setProperty("--mdl-top",top+"px");el.style.setProperty("--mdl-bottom",bottom+"px");
   }
   function closeLibrary(){
     const el=$("#mdl-backdrop");if(!el)return;
     el.classList.remove("mdl-open");document.body.style.overflow="";
-    setTimeout(()=>{el.hidden=true;},260);
+    document.documentElement.classList.remove("mdl-page-open");
+    el.hidden=true;
   }
   async function loadSDK(){
     if(window.supabase?.createClient)return;
@@ -190,7 +205,7 @@
       out.innerHTML='<div class="mdl-empty" style="grid-column:1/-1">'+(CONFIGURED?"Belum ada dokumen yang dipublikasikan pada kategori ini.":"Belum ada buku di kategori ini. Unggah file PDF ke folder books/ di GitHub, lalu daftarkan di data/books.json.")+'</div>';
       return;
     }
-    out.innerHTML=list.map(r=>'<article class="mdl-ref-card"><div class="mdl-ref-cover">'+(r.cover_url?'<img src="'+esc(r.cover_url)+'" alt="" style="width:100%;height:100%;object-fit:cover">':icon("pdf"))+(r.is_featured?'<span class="mdl-tag" style="position:absolute;right:9px;top:9px">'+icon("star")+' Unggulan</span>':"")+'</div><div class="mdl-ref-body"><div class="mdl-ref-title">'+esc(r.title)+'</div><div class="mdl-ref-meta"><span class="mdl-tag">'+esc(r.category?.name||"Umum")+'</span>'+(r.marhalah?'<span>'+esc(r.marhalah)+'</span>':"")+'<span>'+bytes(r.file_size)+'</span></div><div class="mdl-ref-desc">'+esc(r.description||"Dokumen referensi pembelajaran.")+'</div><div class="mdl-ref-actions"><button class="mdl-btn mdl-btn-primary" data-action="preview" data-id="'+esc(r.id)+'">'+icon("book")+' Baca PDF</button><button class="mdl-btn mdl-btn-soft" data-action="download" data-id="'+esc(r.id)+'">Unduh</button></div></div></article>').join("");
+    out.innerHTML=list.map(r=>'<article class="mdl-ref-card"><div class="mdl-ref-cover">'+(r.cover_url?'<img src="'+esc(r.cover_url)+'" alt="" style="width:100%;height:100%;object-fit:cover">':icon("pdf"))+(r.is_featured?'<span class="mdl-tag" style="position:absolute;right:9px;top:9px">'+icon("star")+' Unggulan</span>':"")+'</div><div class="mdl-ref-body"><div class="mdl-ref-title">'+esc(r.title)+'</div><div class="mdl-ref-meta"><span class="mdl-tag">'+esc(r.category?.name||"Umum")+'</span>'+(r.marhalah?'<span>'+esc(r.marhalah)+'</span>':"")+'<span>'+bytes(r.file_size)+'</span></div><div class="mdl-ref-desc">'+esc(r.description||"Dokumen referensi pembelajaran.")+'</div><div class="mdl-ref-actions"><button class="mdl-btn mdl-btn-primary" data-action="preview" data-id="'+esc(r.id)+'">'+icon("book")+(r.ftype&&r.ftype!=="pdf"?" Buka":" Baca PDF")+'</button><button class="mdl-btn mdl-btn-soft" data-action="download" data-id="'+esc(r.id)+'">Unduh</button></div></div></article>').join("");
   }
   async function signedUrl(ref,download){
     const {data,error}=await sb.storage.from(BUCKET).createSignedUrl(ref.file_path,3600,download?{download:true}:{});
@@ -200,11 +215,15 @@
     const ref=refs.find(r=>r.id===id);if(!ref)return;
     const pendingWindow=(download&&!STATIC)?window.open("about:blank","_blank"):null;
     try{
-      const url=STATIC?ref.file_path:await signedUrl(ref,download);
-      if(download&&STATIC){const a=document.createElement("a");a.href=url;a.download=(ref.title||"buku")+".pdf";document.body.appendChild(a);a.click();a.remove();return;}
+      const drive=STATIC&&ref.drive_id;
+      const url=STATIC?(drive?"https://drive.google.com/file/d/"+ref.drive_id+"/preview":ref.file_path):await signedUrl(ref,download);
+      const openUrl=drive?"https://drive.google.com/file/d/"+ref.drive_id+"/view":url;
+      if(download&&STATIC){
+        if(drive){window.open("https://drive.google.com/uc?export=download&id="+ref.drive_id,"_blank","noopener");return;}
+        const a=document.createElement("a");a.href=url;a.download=(ref.title||"buku")+".pdf";document.body.appendChild(a);a.click();a.remove();return;}
       if(download){if(pendingWindow)pendingWindow.location.href=url;else toast("Izinkan pop-up browser untuk mengunduh PDF.");return;}
       activeView="preview";
-      modalContent().innerHTML='<div class="mdl-intro"><div><div class="mdl-eyebrow">PRATINJAU DOKUMEN</div><h2 class="mdl-h2">'+esc(ref.title)+'</h2><div class="mdl-subtitle">'+esc(ref.category?.name||"Referensi")+' · '+bytes(ref.file_size)+'</div></div><div class="mdl-header-actions">'+(STATIC?'<a class="mdl-btn mdl-btn-soft" href="'+esc(url)+'" target="_blank" rel="noopener">Buka di tab baru</a>':"")+'<button class="mdl-btn mdl-btn-soft" data-action="download" data-id="'+esc(id)+'">Unduh PDF</button><button class="mdl-btn mdl-btn-soft" data-action="back-public">Kembali</button></div></div><iframe class="mdl-pdf-view" title="Pratinjau PDF" src="'+esc(url)+'"></iframe>';
+      modalContent().innerHTML='<div class="mdl-intro"><div><div class="mdl-eyebrow">PRATINJAU DOKUMEN</div><h2 class="mdl-h2">'+esc(ref.title)+'</h2><div class="mdl-subtitle">'+esc(ref.category?.name||"Referensi")+' · '+bytes(ref.file_size)+'</div></div><div class="mdl-header-actions">'+(STATIC?'<a class="mdl-btn mdl-btn-soft" href="'+esc(openUrl)+'" target="_blank" rel="noopener">Buka di tab baru</a>':"")+'<button class="mdl-btn mdl-btn-soft" data-action="download" data-id="'+esc(id)+'">'+(ref.ftype&&ref.ftype!=="pdf"?"Unduh":"Unduh PDF")+'</button><button class="mdl-btn mdl-btn-soft" data-action="back-public">Kembali</button></div></div><iframe class="mdl-pdf-view" title="Pratinjau PDF" src="'+esc(url)+'"></iframe>';
     }catch(err){if(pendingWindow)pendingWindow.close();toast("PDF belum dapat dibuka: "+(err.message||"Kesalahan penyimpanan")); }
   }
   function renderLogin(message){
@@ -360,6 +379,16 @@
   document.addEventListener("click",e=>{
     if(e.target.closest("[data-mdl-open]"))openLibrary();
   });
+  // Menu lain di navigasi/header ditekan -> tutup Referensi, lalu halaman tujuan tampil seperti biasa.
+  document.addEventListener("click",e=>{
+    const el=$("#mdl-backdrop");if(!el||el.hidden)return;
+    const nav=e.target.closest(".ios-glass-dock .ios-glass-item");
+    const head=e.target.closest("#root header.sticky button");
+    if((nav&&!nav.matches("[data-mdl-open]"))||(head&&!head.matches(".mz-tema-hdrbtn")))closeLibrary();
+  },true);
+  window.addEventListener("resize",placePage);
+  if(window.visualViewport)window.visualViewport.addEventListener("resize",placePage);
+  new MutationObserver(placePage).observe(document.documentElement,{attributes:true,attributeFilter:["data-tema","data-huruf"]});
   window.MARKAZ_DIGITAL_LIBRARY={open:openLibrary,version:"2.0.0",configured:CONFIGURED,mode:STATIC?"static":"supabase"};
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mountHomeAndNav,{once:true});
   else mountHomeAndNav();

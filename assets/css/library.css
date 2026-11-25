@@ -131,3 +131,13 @@
 @media(prefers-reduced-motion:reduce){
   .mdl-home-card,.mdl-window,.mdl-backdrop,.mdl-ref-card,.mdl-btn,.mdl-icon-btn{transition:none!important}
 }
+
+/* ===== Mode halaman: Referensi tampil di antara header dan menu bawah, bukan melayang ===== */
+#mdl-backdrop.mdl-backdrop{
+  inset:var(--mdl-top,56px) 0 var(--mdl-bottom,78px) 0;z-index:60;padding:0;align-items:stretch;justify-content:center;
+  background:var(--background,#f6faf7);-webkit-backdrop-filter:none;backdrop-filter:none}
+#mdl-backdrop .mdl-window{
+  width:100%;max-width:1160px;height:100%;max-height:none;margin:0 auto;border:0;border-radius:0;box-shadow:none;transform:none}
+/* Tombol "Referensi" di menu bawah menyala saat halamannya terbuka; menu lain dipadamkan sementara */
+html.mdl-page-open .ios-glass-item.active:not([data-mdl-open]){color:var(--muted-foreground,#61776a)!important;background:transparent!important;box-shadow:none!important}
+html.mdl-page-open .ios-glass-item[data-mdl-open]{color:var(--primary,#176444)!important;background:color-mix(in oklab,var(--primary,#176444) 13%,transparent)}

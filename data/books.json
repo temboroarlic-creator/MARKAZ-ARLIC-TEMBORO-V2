@@ -1,5 +1,5 @@
 {
-  "_petunjuk": "Tambah buku: unggah PDF ke folder books/, lalu tambahkan satu objek di daftar 'books'. Lihat books/README.md.",
+  "_petunjuk": "Tambah buku: salin ID/link file Google Drive ke 'drive' (akses: Siapa saja yang memiliki link), atau unggah PDF ke folder books/ dan isi 'file'. Lihat books/README.md.",
   "settings": {
     "title": "Kumpulan Referensi Mengajar",
     "description": "Pusat bahan ajar, modul, buku, dan referensi pembelajaran Markaz Lughoh Temboro.",
@@ -7,21 +7,120 @@
     "githubRepo": ""
   },
   "categories": [
-    "Buku Pelajaran",
     "Modul",
-    "Referensi Guru"
+    "Referensi Guru",
+    "Presentasi"
   ],
-  "_contoh": {
-    "id": "nahwu-wadhih-1",
-    "title": "Nahwu Wadhih Jilid 1",
-    "description": "Ringkasan isi buku.",
-    "category": "Buku Pelajaran",
-    "marhalah": "Mubtadi 1",
-    "subject": "Nahwu",
-    "file": "books/nahwu-wadhih-1.pdf",
-    "cover": "",
-    "featured": false,
-    "order": 1
-  },
-  "books": []
+  "books": [
+    {
+      "id": "BK0001",
+      "title": "Modul Webinar",
+      "description": "",
+      "category": "Modul",
+      "drive": "13CpLx63hidjhQt1HrJlrLolTVHAUmeO4",
+      "type": "pdf",
+      "size": 8447187,
+      "order": 1
+    },
+    {
+      "id": "PP0001",
+      "title": "ننمو لننمي",
+      "description": "",
+      "category": "Presentasi",
+      "drive": "1edwkxMPKvpb3YBprcUSIsX3oIuSm0nZq",
+      "type": "pptx",
+      "size": 102842474,
+      "order": 2
+    },
+    {
+      "id": "BK0002",
+      "title": "Modul Webinar Bahasa Arab Profesional",
+      "description": "",
+      "category": "Modul",
+      "drive": "17StH2tI5DY7VKg7t2rv8EuFpNkfcV1At",
+      "type": "pdf",
+      "size": 10401749,
+      "order": 3
+    },
+    {
+      "id": "BK0003",
+      "title": "Transformasi Ekosistem Arab",
+      "description": "",
+      "category": "Referensi Guru",
+      "drive": "10WNbreI4t6sOrQUzCcQL22wJT60FYmVP",
+      "type": "pdf",
+      "size": 2006762,
+      "order": 4
+    },
+    {
+      "id": "BK0004",
+      "title": "الدورة الجديدة تمبورو 2026",
+      "description": "",
+      "category": "Referensi Guru",
+      "drive": "11_KGcUVWUZid3hVJxo8uGn03Zhd_J5uC",
+      "type": "pdf",
+      "size": 6244144,
+      "order": 5
+    },
+    {
+      "id": "BK0005",
+      "title": "كتيب الدورات التدريبية",
+      "description": "",
+      "category": "Referensi Guru",
+      "drive": "1KwV_mL1UY8Km1qH1qYW6qwtvEGdxFH1m",
+      "type": "pdf",
+      "size": 4409348,
+      "order": 6
+    },
+    {
+      "id": "BK0006",
+      "title": "Sifat Pengajar",
+      "description": "",
+      "category": "Referensi Guru",
+      "drive": "1it7uctIfo9MFXH7CaonbP1PtNjsTmpN1",
+      "type": "pdf",
+      "size": 396638,
+      "order": 7
+    },
+    {
+      "id": "PP0002",
+      "title": "الوسائل التعليمية",
+      "description": "",
+      "category": "Presentasi",
+      "drive": "1xaBm8W-ANEctXR3HiCqkHDiYSTDvc9-Z",
+      "type": "pptx",
+      "size": 1079031,
+      "order": 8
+    },
+    {
+      "id": "BK0007",
+      "title": "ديداكتيك اللغة العربية",
+      "description": "",
+      "category": "Referensi Guru",
+      "drive": "1O0SnMPUHgB6yjDNS4U0QPcbhmdGG_OdU",
+      "type": "pdf",
+      "size": 4420508,
+      "order": 9
+    },
+    {
+      "id": "BK0008",
+      "title": "15 طريقة لتقديم المفردات للنّاطقين بغيرها",
+      "description": "",
+      "category": "Referensi Guru",
+      "drive": "1s7uasH0rJQJrLAChxdTdoKNXuSMas2qt",
+      "type": "pdf",
+      "size": 5728443,
+      "order": 10
+    },
+    {
+      "id": "BK0009",
+      "title": "البيئة اللغوية العربية في تعليم اللغة العربية لغير الناطقين بها",
+      "description": "",
+      "category": "Referensi Guru",
+      "drive": "1nqqShZ8wrYeSMmTrWU5E_6R1crsC1_P6",
+      "type": "pdf",
+      "size": 613961,
+      "order": 11
+    }
+  ]
 }
