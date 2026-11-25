@@ -17,7 +17,9 @@ Uji di komputer: jalankan `python -m http.server` di folder ini, buka `http://lo
 | `assets/js/app.js` | aplikasi utama (halaman, kuis, game bawaan) | perubahan fitur |
 | `assets/js/games-hub.js` | katalog game & tombol layar penuh | game baru |
 | `assets/js/library.js`, `login.js`, `config.js` | perpustakaan, login, pengaturan | sesuai kebutuhan |
-| `assets/css/*.css` | tampilan | perubahan desain |
+| `assets/css/theme.css`, `assets/js/theme.js` | 4 tema + warna aksen + ukuran huruf + animasi (tombol "Tampilan" di header) | menambah/mengubah tema |
+| `assets/css/glass.css`, `glass-motion.css`, `assets/js/glass-motion.js` | tema "Kaca" (berat) — hanya dimuat bila dipilih | jarang |
+| `assets/css/*.css` lainnya | tampilan dasar | perubahan desain |
 
 ## Memperbarui sebagian
 Ganti **hanya** berkas yang berubah di GitHub. Pengguna mengunduh ulang berkas itu saja
@@ -34,3 +36,6 @@ Buka `assets/js/login.js` (nama pengguna & password di bagian atas). Ini pembata
 Web GitHub membatasi 100 berkas per sekali unggah. Unggah per folder
 (`games/sabiq/assets/`, `games/bebek/assets/`, dst.), atau pakai GitHub Desktop agar sekaligus.
 Aktifkan Pages: Settings → Pages → Branch `main` / folder `/ (root)`.
+
+## Tampilan
+Bawaan = tema **Ringan**. Pilihan pengguna disimpan di HP masing-masing. Untuk mengubah warna tema, edit blok `html[data-tema="..."]` di `assets/css/theme.css`.

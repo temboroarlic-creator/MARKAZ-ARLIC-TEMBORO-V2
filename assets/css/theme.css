@@ -1,0 +1,111 @@
+/* Tema & kustomisasi tampilan.
+   Pilihan pengguna disimpan di HP masing-masing (localStorage) oleh assets/js/theme.js.
+   Tema bawaan = "ringan" (tanpa efek berat). Tema "kaca" memuat glass.css + glass-motion.css hanya bila dipilih. */
+
+/* ---- Warna aksen (hue) ---- */
+html{--h:165}
+html[data-aksen="biru"]{--h:250}
+html[data-aksen="ungu"]{--h:305}
+html[data-aksen="marun"]{--h:15}
+html[data-aksen="emas"]{--h:75}
+
+/* ---- Ukuran huruf ---- */
+html[data-huruf="s"]{font-size:15px}
+html[data-huruf="l"]{font-size:17.5px}
+
+/* ---- Animasi hemat ---- */
+html[data-animasi="hemat"] *,html[data-animasi="hemat"] *::before,html[data-animasi="hemat"] *::after{
+  animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+
+/* ---- Tema 1: RINGAN (bawaan) ---- */
+html[data-tema="ringan"]{
+  --background:oklch(98.6% .006 var(--h));--foreground:oklch(27% .03 var(--h));
+  --card:oklch(100% 0 0);--card-foreground:oklch(27% .03 var(--h));
+  --popover:oklch(100% 0 0);--popover-foreground:oklch(27% .03 var(--h));
+  --primary:oklch(44% .1 var(--h));--primary-foreground:oklch(99% .005 var(--h));
+  --secondary:oklch(95.5% .014 var(--h));--secondary-foreground:oklch(34% .06 var(--h));
+  --muted:oklch(96% .01 var(--h));--muted-foreground:oklch(50% .03 var(--h));
+  --accent:oklch(94.5% .025 var(--h));--accent-foreground:oklch(34% .06 var(--h));
+  --border:oklch(91% .015 var(--h));--input:oklch(89% .018 var(--h));--ring:oklch(60% .08 var(--h))}
+
+/* ---- Tema 2: MALAM ---- */
+html[data-tema="malam"]{color-scheme:dark;
+  --background:oklch(19% .02 var(--h));--foreground:oklch(93% .015 var(--h));
+  --card:oklch(24% .022 var(--h));--card-foreground:oklch(93% .015 var(--h));
+  --popover:oklch(24% .022 var(--h));--popover-foreground:oklch(93% .015 var(--h));
+  --primary:oklch(76% .12 var(--h));--primary-foreground:oklch(18% .03 var(--h));
+  --secondary:oklch(29% .025 var(--h));--secondary-foreground:oklch(88% .03 var(--h));
+  --muted:oklch(27% .02 var(--h));--muted-foreground:oklch(72% .025 var(--h));
+  --accent:oklch(31% .035 var(--h));--accent-foreground:oklch(90% .03 var(--h));
+  --border:oklch(34% .025 var(--h));--input:oklch(36% .025 var(--h));--ring:oklch(62% .09 var(--h));
+  --gold:oklch(78% .12 80);--gold-foreground:oklch(20% .03 80)}
+
+/* ---- Tema 3: KERTAS (krem, nyaman untuk membaca) ---- */
+html[data-tema="kertas"]{
+  --background:oklch(95.5% .028 85);--foreground:oklch(27% .035 60);
+  --card:oklch(98.2% .015 85);--card-foreground:oklch(27% .035 60);
+  --popover:oklch(98.2% .015 85);--popover-foreground:oklch(27% .035 60);
+  --primary:oklch(42% .09 var(--h));--primary-foreground:oklch(98% .01 85);
+  --secondary:oklch(92% .03 85);--secondary-foreground:oklch(34% .05 60);
+  --muted:oklch(93% .028 85);--muted-foreground:oklch(48% .04 70);
+  --accent:oklch(91% .04 85);--accent-foreground:oklch(34% .05 60);
+  --border:oklch(87% .035 85);--input:oklch(85% .035 85);--ring:oklch(58% .08 var(--h))}
+
+/* ---- Tema 4: KACA -> gaya ada di glass.css (dimuat hanya saat dipilih); aksen tetap berlaku ---- */
+html[data-tema="kaca"][data-aksen]:not([data-aksen="hijau"]){--primary:oklch(42% .105 var(--h));--ring:oklch(58% .09 var(--h));--accent-foreground:oklch(31% .06 var(--h))}
+
+/* ---- Gaya dasar tema ringan/malam/kertas: datar, tanpa blur ---- */
+html[data-tema]:not([data-tema="kaca"]) body{background:var(--background)!important;color:var(--foreground)}
+html[data-tema]:not([data-tema="kaca"]) #root>.ios-app-shell{min-height:100vh;padding-bottom:calc(78px + env(safe-area-inset-bottom));background:var(--background)}
+html[data-tema]:not([data-tema="kaca"]) #root main.relative.flex-1.overflow-hidden>img[aria-hidden="true"],
+html[data-tema]:not([data-tema="kaca"]) #root main.relative.flex-1.overflow-hidden>div.absolute.inset-0{display:none}
+html[data-tema]:not([data-tema="kaca"]) [class*="backdrop-blur"],html[data-tema]:not([data-tema="kaca"]) .mdl-home-card,html[data-tema]:not([data-tema="kaca"]) .mdl-backdrop,html[data-tema]:not([data-tema="kaca"]) .mdl-header{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html[data-tema]:not([data-tema="kaca"]) #root header.sticky{background:var(--background)!important;box-shadow:none}
+html[data-tema]:not([data-tema="kaca"]) #root main [class*="bg-card"]{box-shadow:none}
+
+/* Menu bawah datar */
+html[data-tema]:not([data-tema="kaca"]) .ios-glass-dock{position:fixed;z-index:70;left:0;right:0;bottom:0;padding:6px 8px calc(6px + env(safe-area-inset-bottom));
+  background:var(--card);border-top:1px solid var(--border)}
+html[data-tema]:not([data-tema="kaca"]) .ios-glass-dock-inner{display:flex;align-items:center;justify-content:space-around;gap:2px;max-width:640px;margin:0 auto}
+html[data-tema]:not([data-tema="kaca"]) .ios-glass-item{appearance:none;flex:1;min-width:0;height:54px;padding:4px 2px;border:0;border-radius:14px;background:transparent;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;
+  color:var(--muted-foreground);font:600 10px/1.1 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}
+html[data-tema]:not([data-tema="kaca"]) .ios-glass-item svg{width:22px;height:22px;display:block}
+html[data-tema]:not([data-tema="kaca"]) .ios-glass-item span{white-space:nowrap}
+html[data-tema]:not([data-tema="kaca"]) .ios-glass-item.active{color:var(--primary);background:color-mix(in oklab,var(--primary) 13%,transparent)}
+html[data-tema]:not([data-tema="kaca"]) .ios-glass-item:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+
+/* Perpustakaan Referensi: panel dibuat solid (tanpa blur teks di belakang tidak tembus) */
+html[data-tema]:not([data-tema="kaca"]) .mdl-window{background:#f7fbf8!important}
+html[data-tema]:not([data-tema="kaca"]) .mdl-backdrop{background:rgba(10,30,19,.5)!important}
+
+/* ---- Panel pengaturan tampilan ---- */
+.mz-tema-fab{position:fixed;top:max(10px,env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));z-index:2147483647;
+  width:42px;height:42px;border-radius:50%;border:1px solid #d7e8dc;background:#fff;color:#176444;display:none;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.14)}
+html.arlic-locked .mz-tema-fab,.mz-tema-fab.mz-show{display:inline-flex}
+.mz-tema-sheet[hidden]{display:none}
+.mz-tema-sheet{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:flex-end;justify-content:center;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.mz-tema-scrim{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.mz-tema-panel{position:relative;width:min(520px,100%);max-height:90dvh;overflow:auto;box-sizing:border-box;
+  background:var(--card,#fff);color:var(--foreground,#173c2b);border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));
+  box-shadow:0 -10px 40px rgba(0,0,0,.28)}
+@media(min-width:640px){.mz-tema-sheet{align-items:center}.mz-tema-panel{border-radius:22px}}
+.mz-tema-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.mz-tema-head strong{font-size:17px}
+.mz-tema-x{width:36px;height:36px;border-radius:50%;border:0;background:var(--muted,#eee);color:inherit;font-size:16px;cursor:pointer}
+.mz-tema-lbl{margin:14px 0 8px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted-foreground,#5b7266)}
+.mz-tema-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mz-opt{appearance:none;text-align:left;padding:8px;border-radius:14px;border:2px solid var(--border,#ddd);background:transparent;color:inherit;cursor:pointer;font:inherit}
+.mz-opt[aria-pressed="true"]{border-color:var(--primary,#176444);background:color-mix(in oklab,var(--primary,#176444) 10%,transparent)}
+.mz-sw{display:block;height:42px;border-radius:9px;border:1px solid rgba(0,0,0,.1);padding:7px;box-sizing:border-box}
+.mz-sw i{display:block;height:7px;width:45%;border-radius:4px;margin-bottom:5px}
+.mz-sw b{display:block;height:5px;width:75%;border-radius:3px;opacity:.5}
+.mz-opt strong{display:block;margin-top:7px;font-size:14px}
+.mz-opt small{display:block;font-size:11px;opacity:.7;line-height:1.25;margin-top:1px}
+.mz-aksen{display:flex;gap:12px}
+.mz-dot{width:36px;height:36px;border-radius:50%;border:3px solid transparent;cursor:pointer;box-shadow:inset 0 0 0 2px rgba(255,255,255,.7)}
+.mz-dot[aria-pressed="true"]{border-color:var(--foreground,#173c2b)}
+.mz-seg{display:flex;gap:8px}
+.mz-seg .mz-opt{flex:1;text-align:center;padding:11px 6px;font-size:13px;font-weight:600}
+.mz-reset{margin-top:16px;width:100%;padding:12px;border-radius:12px;border:1px solid var(--border,#ddd);background:transparent;color:inherit;font:600 13px system-ui;cursor:pointer}

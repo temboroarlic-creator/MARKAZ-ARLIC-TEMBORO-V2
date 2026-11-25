@@ -4,7 +4,7 @@
    - Berkas lain (css, js, data pelajaran, game, gambar, audio): tampil cepat dari cache, lalu diperbarui diam-diam.
      Jadi saat Anda mengganti satu berkas di GitHub, hanya berkas itu yang diunduh ulang.
    Naikkan VERSION hanya jika Anda mengubah isi sw.js ini atau ingin mengosongkan seluruh cache pengguna. */
-const VERSION = 'v2';
+const VERSION = 'v3';
 const CACHE = 'markaz-lughoh-' + VERSION;
 const CORE = [
   "./",
@@ -18,15 +18,11 @@ const CORE = [
   "data/books.json",
   "assets/css/app.css",
   "assets/css/games-hub.css",
-  "assets/css/glass-motion.css",
-  "assets/css/glass.css",
   "assets/css/library.css",
   "assets/css/login.css",
-  "assets/css/responsive.css",
   "assets/js/app.js",
   "assets/js/config.js",
   "assets/js/games-hub.js",
-  "assets/js/glass-motion.js",
   "assets/js/library.js",
   "assets/js/login.js",
   "assets/js/pwa-register.js",
@@ -45,7 +41,9 @@ const CORE = [
   "data/nash/mutawassith-1.json",
   "data/nash/mutawassith-2.json",
   "data/nash/tamhidi-1.json",
-  "data/nash/tamhidi-2.json"
+  "data/nash/tamhidi-2.json",
+  "assets/css/theme.css",
+  "assets/js/theme.js"
 ];
 
 self.addEventListener('install', event => {

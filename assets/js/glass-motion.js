@@ -6,7 +6,7 @@
   function animatePage(){
     scheduled=false;
     const main=root.querySelector('.ios-app-shell > main');
-    if(!main||reduced)return;
+    if(!main||reduced||document.documentElement.getAttribute('data-tema')!=='kaca')return;
     main.classList.remove('ios-page-enter');
     void main.offsetWidth;
     main.classList.add('ios-page-enter');
@@ -37,7 +37,7 @@
   if(!reduced){
     const cardSelector='#root main button[class*="rounded-3xl"], #root main [class*="bg-card"][class*="rounded-3xl"]';
     document.addEventListener('pointermove',function(event){
-      if(event.pointerType==='touch')return;
+      if(event.pointerType==='touch'||document.documentElement.getAttribute('data-tema')!=='kaca')return;
       const card=event.target.closest?.(cardSelector);
       if(!card)return;
       const rect=card.getBoundingClientRect();
