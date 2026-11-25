@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#12a72b">
+<title>Undi Bebek — Duck Race</title>
+<style>
+:root{--grass:#13ad2e;--grass-dark:#078b24;--water:#378ca7;--ink:#17232b;--red:#ef5548}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+body{font-family:Arial,Helvetica,sans-serif;background:#2f8ba5;color:#111}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+.app{height:100dvh;min-height:420px;display:grid;grid-template-rows:clamp(132px,19vh,174px) minmax(0,1fr);overflow:hidden}
+.header{
+ position:relative;z-index:3;display:grid;grid-template-rows:minmax(0,1fr) 38px;
+ padding:8px 14px 7px;background:
+ radial-gradient(ellipse at 12% 30%,rgba(255,255,255,.13) 0 2px,transparent 3px),
+ radial-gradient(ellipse at 78% 65%,rgba(0,90,20,.1) 0 2px,transparent 3px),
+ repeating-linear-gradient(165deg,transparent 0 24px,rgba(0,90,20,.045) 25px 27px),
+ linear-gradient(180deg,#22c83b 0%,#10a92d 78%,#078d25 100%);
+ border-bottom:8px solid #75502d;
+ box-shadow:0 4px 0 rgba(0,0,0,.18)
+}
+.header:before{content:"";position:absolute;left:0;right:0;bottom:-8px;height:8px;background:repeating-linear-gradient(90deg,#3b9d2e 0 18px,#72c94a 18px 24px,#247c2c 24px 36px)}
+.header-main{display:grid;grid-template-columns:minmax(120px,1fr) minmax(250px,390px) minmax(120px,1fr);align-items:center;gap:12px;min-height:0}
+.left-controls{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.old-btn{min-width:108px;border:2px solid #253a20;border-radius:10px;padding:7px 14px;font-size:clamp(12px,1.4vw,17px);font-weight:800;color:#17251b;box-shadow:0 2px 0 rgba(0,0,0,.25);text-shadow:0 1px rgba(255,255,255,.35)}
+.old-btn.pause{background:linear-gradient(#9af064,#42c52f)}
+.old-btn.clear{background:linear-gradient(#ff887b,#e84236);color:#32110d}
+.timer-box{justify-self:center;width:100%;padding:4px 12px 6px;background:#f7f7ff;border:4px solid #31343d;border-radius:14px;text-align:center;box-shadow:0 3px 0 rgba(0,0,0,.16),inset 0 1px 0 #fff}
+.timer{font-family:"Arial Black",Arial,sans-serif;font-size:clamp(36px,5.4vw,66px);line-height:1.03;letter-spacing:.025em;font-weight:900;font-variant-numeric:tabular-nums;color:#050505;white-space:nowrap}
+.timer-small{font-size:9px;font-weight:900;letter-spacing:.17em;color:#68717a;margin-top:1px}
+.brand{justify-self:end;text-align:right;color:#07551b;text-shadow:0 1px rgba(255,255,255,.22);font-weight:1000;font-size:clamp(11px,1.4vw,17px);letter-spacing:.1em}
+.brand small{display:block;font-size:9px;letter-spacing:.16em;margin-top:4px}
+.settings{
+ display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;overflow:hidden;
+ color:#063d17;font-size:10px;font-weight:900
+}
+.settings label{white-space:nowrap}
+.settings select,.settings input{border:1px solid #075e20;border-radius:7px;background:#e9ffe8;color:#14321b;padding:5px 7px;font-size:11px;font-weight:800;outline:none}.settings input[type=number]{width:62px;text-align:center}
+.settings button{border:1px solid #075e20;border-radius:7px;padding:5px 9px;background:#e8ffe7;color:#12451c;font-size:10px;font-weight:900;white-space:nowrap}
+.settings button.active{background:#fff;border:2px solid #075e20;padding:4px 8px}
+.stage{position:relative;min-height:0;overflow:hidden;background:#3489a4}
+#raceCanvas{display:block;width:100%;height:100%;touch-action:none}
+.stage-top-label{position:absolute;left:10px;top:8px;color:rgba(255,255,255,.78);font-size:9px;font-weight:900;letter-spacing:.13em;text-shadow:0 1px 3px #16485b;pointer-events:none}
+.stage-credit{position:absolute;right:9px;bottom:7px;color:rgba(255,255,255,.56);font-size:8px;font-weight:800;letter-spacing:.08em;pointer-events:none}
+.winner-banner{position:absolute;z-index:5;left:50%;top:10px;transform:translate(-50%,-12px);opacity:0;transition:.25s;pointer-events:none;
+ display:flex;align-items:center;gap:8px;padding:8px 14px;border:2px solid #795a19;border-radius:11px;background:#fff5b9;color:#34260b;box-shadow:0 4px 14px #102e3d66;max-width:90%}
+.winner-banner.show{opacity:1;transform:translate(-50%,0)}
+.winner-banner .cup{font-size:23px}
+.winner-banner strong{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.winner-banner small{display:block;font-size:8px;letter-spacing:.13em;font-weight:900}
+.overlay{position:absolute;inset:0;z-index:10;display:grid;place-items:center;padding:12px;background:rgba(5,22,30,.52)}
+.overlay.hidden{display:none}
+.modal{width:min(560px,95vw);max-height:94%;overflow:auto;background:#f7fff4;border:4px solid #273a29;border-radius:14px;box-shadow:0 12px 40px #061c2d88;padding:17px;color:#17251b}
+.modal h2{margin:3px 0 5px;font-size:22px}
+.modal p{margin:0 0 12px;font-size:11px;color:#56645b;line-height:1.4}
+.modal textarea{width:100%;height:min(35vh,230px);resize:vertical;border:2px solid #9db79e;border-radius:8px;padding:10px;background:white;color:#18241b;font-size:12px;line-height:1.5}
+.modal-actions{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap;margin-top:10px}
+.modal-actions button{border:2px solid #28452a;border-radius:8px;background:#e2f9df;padding:8px 12px;font-size:11px;font-weight:900}
+.modal-actions .primary{background:#39c54a;color:#06280d}
+.countdown{text-align:center;width:min(350px,90vw)}
+.countdown .num{font-size:90px;font-weight:1000;color:#13a82d;line-height:1}
+.countdown .hint{font-size:12px;font-weight:900;color:#516052;margin-top:8px}
+.result-modal{width:min(650px,96vw);text-align:center}
+.result-modal .trophy{font-size:35px}
+.result-modal h2{font-size:25px;color:#17652b}
+.winner-card{display:flex;align-items:center;justify-content:center;gap:13px;background:#e5f7df;border:2px solid #a5d99b;border-radius:10px;padding:9px;margin:10px 0}
+.winner-card img{width:68px;height:62px;object-fit:contain}.winner-runner{width:76px;height:62px;flex:0 0 76px;background-size:300% 100%;background-position:0 0;background-repeat:no-repeat}
+.winner-card strong{font-size:17px}
+.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:8px 0}
+.podium div{background:#eef5e9;border:1px solid #c8d8c2;border-radius:8px;padding:8px 4px;min-width:0}
+.podium div:first-child{background:#fff2c6;border-color:#dfc26b}
+.podium b{display:block;font-size:9px;color:#7c5c0b}
+.podium strong{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px}
+.podium small{font-size:9px;color:#637065}
+.result-list{display:grid;grid-template-columns:repeat(2,1fr);gap:3px 12px;text-align:left;font-size:10px;max-height:120px;overflow:auto;margin-top:7px}
+.result-list div{padding:3px 5px;border-bottom:1px solid #dce6d8}
+.toast{position:absolute;z-index:20;bottom:15px;left:50%;transform:translate(-50%,12px);opacity:0;transition:.2s;background:#f4ffd8;color:#233a16;border:1px solid #536b34;border-radius:8px;padding:8px 12px;font-size:10px;font-weight:900;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:680px){
+ .app{grid-template-rows:clamp(128px,22vh,160px) minmax(0,1fr)}
+ .header{padding:6px 7px 5px;grid-template-rows:minmax(0,1fr) 34px}
+ .header-main{grid-template-columns:80px minmax(0,1fr) 65px;gap:5px}
+ .old-btn{min-width:72px;padding:6px 7px;font-size:12px}
+ .brand{font-size:9px}.brand small{font-size:7px}
+ .timer-box{padding:5px 4px;border-width:3px}.timer{font-size:clamp(31px,8vw,46px)}
+ .timer-small{font-size:7px}
+ .settings{gap:4px;font-size:8px;justify-content:space-between}
+ .settings select,.settings input{padding:4px 3px;font-size:9px;max-width:70px}.settings input[type=number]{width:48px}
+ .settings button{padding:4px 5px;font-size:8px}
+ .stage-credit{display:none}
+}
+@media(max-width:420px){
+ .header-main{grid-template-columns:70px minmax(0,1fr) 50px}
+ .old-btn{min-width:65px}
+ .brand{font-size:8px;letter-spacing:.03em}
+ .brand small{letter-spacing:.04em}
+ .settings label.hide-small{display:none}
+}
+
+/* v5 layout fixes */
+.app{min-height:0}
+.timer{font-size:clamp(30px,min(5.4vw,7vh),66px)}
+.timer-box{padding:3px 12px 4px}
+.settings{justify-content:safe center;overflow-x:auto;scrollbar-width:none}
+.settings::-webkit-scrollbar{display:none}
+.settings>*{flex:0 0 auto}
+@media(max-width:680px){.timer{font-size:clamp(28px,min(8vw,6.5vh),46px)}}
+</style>
+</head>
+<body>
+<div class="app">
+ <header class="header">
+  <div class="header-main">
+   <div class="left-controls">
+    <button class="old-btn pause" id="pauseBtn">Pause</button>
+    <button class="old-btn clear" id="clearBtn">Clear</button>
+   </div>
+   <div class="timer-box">
+    <div class="timer" id="timer">00:00:00</div>
+    <div class="timer-small" id="timerCaption">READY TO RACE</div>
+   </div>
+   <div class="brand">RACE ARENA<small>DUCK · RUNNER RACE</small></div>
+  </div>
+  <div class="settings">
+   <button id="duckMode" class="active">🦆 Bebek</button>
+   <button id="runnerMode">🏃 Pelari</button>
+   <label for="countInput" class="hide-small">JUMLAH</label>
+   <input id="countInput" type="number" min="2" max="100" value="100" inputmode="numeric" aria-label="Jumlah peserta">
+   <button id="namesBtn">Nama</button>
+   <button id="labelModeBtn">Nomor</button>
+   <label for="durationSelect" class="hide-small">DURASI</label>
+   <select id="durationSelect"><option value="10">10 dtk</option><option value="20" selected>20 dtk</option><option value="30">30 dtk</option><option value="45">45 dtk</option><option value="60">60 dtk</option></select>
+   <button id="raceAgainBtn">Race Again?</button>
+   <button id="fullscreenBtn">⛶</button>
+  </div>
+ </header>
+ <main class="stage" id="stage">
+  <canvas id="raceCanvas"></canvas>
+  <div class="stage-top-label" id="stageLabel">SWIM YOUR WAY TO THE FINISH LINE!</div>
+  <div class="stage-credit">RACE ARENA · LOCAL EDITION</div>
+  <div class="winner-banner" id="winnerBanner"><span class="cup">🏆</span><div><small>FIRST TO THE FINISH!</small><strong id="winnerName">—</strong></div></div>
+  <div class="overlay hidden" id="countdownOverlay"><div class="modal countdown"><div class="num" id="countdownNum">3</div><div class="hint">GET READY!</div></div></div>
+  <div class="overlay hidden" id="namesOverlay">
+   <div class="modal"><h2>Nama Peserta</h2><p>Masukkan satu nama per baris. Jika nama kurang dari jumlah peserta, sisanya otomatis menggunakan nomor peserta.</p>
+    <textarea id="namesInput" placeholder="Peserta 01&#10;Peserta 02&#10;Peserta 03"></textarea>
+    <div class="modal-actions"><button id="cancelNamesBtn">Batal</button><button class="primary" id="saveNamesBtn">Simpan</button></div>
+   </div>
+  </div>
+  <div class="overlay hidden" id="resultsOverlay">
+   <div class="modal result-modal">
+    <div class="trophy">🏆</div><h2>Race Results!</h2><p id="resultSubtitle">The race is over!</p>
+    <div class="winner-card" id="winnerCard"></div>
+    <div class="podium" id="podium"></div>
+    <div class="result-list" id="resultList"></div>
+    <div class="modal-actions"><button id="exportBtn">Download CSV</button><button id="closeResultsBtn">Tutup</button><button class="primary" id="runAgainBtn">Race Again!</button></div>
+   </div>
+  </div>
+  <div class="toast" id="toast"></div>
+ </main>
+</div>
+<script>
+const DUCKS=["assets/fc23161828.webp", "assets/4948cb985f.webp", "assets/d782cfbc68.webp", "assets/3adcef156d.webp", "assets/c7cef6bf2a.webp", "assets/e3296cf865.webp", "assets/8d291ea761.webp", "assets/a59731306b.webp", "assets/0e1686bbf4.webp", "assets/b0fcd82f3d.webp", "assets/7901c9ffce.webp", "assets/25cb668dc8.webp", "assets/4290e00a00.webp", "assets/c84decc9f0.webp", "assets/c64266b051.webp", "assets/8e856ca15c.webp", "assets/2cb2024826.webp", "assets/f1ee2b94d3.webp", "assets/0aaa0b2247.webp", "assets/e22c205e64.webp", "assets/be9dc35a72.webp", "assets/c27fe526db.webp", "assets/b29a0907ac.webp", "assets/ddf4a3ede2.webp", "assets/a78628e4aa.webp", "assets/45ca88e257.webp", "assets/786167bdda.webp", "assets/4326cf19ea.webp", "assets/df21b06913.webp", "assets/928025884d.webp", "assets/e67f209e7a.webp", "assets/8b676e42e2.webp", "assets/d7205d1c85.webp", "assets/4bd6bd0b83.webp", "assets/6f90b9a996.webp", "assets/12186a47e7.webp", "assets/a8793ec748.webp", "assets/c584f5a23a.webp", "assets/386df3a187.webp", "assets/d8ee062cd0.webp", "assets/9de3fb7733.webp", "assets/5328a0a0f1.webp", "assets/9b39514218.webp", "assets/2a875bf027.webp", "assets/c757e3dcb6.webp", "assets/2083a2b9da.webp", "assets/b52fa5eab2.webp", "assets/d8017ba1d5.webp", "assets/2b9cd0fecd.webp", "assets/b22a9515b1.webp", "assets/f0c80104a4.webp", "assets/ded60bc951.webp", "assets/c0bcac3d03.webp", "assets/bc3c12d543.webp", "assets/2a42b9c66a.webp", "assets/f707c0ee33.webp", "assets/20931ceb3d.webp", "assets/4e7d3e5867.webp", "assets/eae0116ffe.webp", "assets/a327406ede.webp", "assets/1a6785e2af.webp", "assets/64aeff5077.webp", "assets/df906eb495.webp", "assets/daa393fbd1.webp", "assets/9c71b73d85.webp", "assets/321d9dbac1.webp", "assets/de78057dd6.webp", "assets/2fe5a94d15.webp", "assets/eca1e2de2d.webp", "assets/021d987029.webp", "assets/bb6c9d300d.webp", "assets/3e9d7fee66.webp", "assets/6d2c8872be.webp", "assets/35ef6cd0a2.webp", "assets/baa1fbb36b.webp", "assets/63794b0217.webp", "assets/58cb9d5145.webp", "assets/849a2f4673.webp", "assets/fe84bf6aa2.webp", "assets/bd47e3ec08.webp", "assets/e4c92c86b7.webp", "assets/d41a1c5ce2.webp", "assets/89fc4138ed.webp", "assets/938d14c8f0.webp", "assets/5f8c554f2b.webp", "assets/d2789225a7.webp", "assets/542102c006.webp", "assets/fac0144f28.webp", "assets/1540578ae8.webp", "assets/cdd322169e.webp", "assets/5c9c91ecc5.webp", "assets/103cff5791.webp", "assets/92c4b67759.webp", "assets/d07bcf784c.webp", "assets/789bb51684.webp", "assets/ff8898f258.webp", "assets/5a843ba78e.webp", "assets/595943d711.webp", "assets/c32aad2dab.webp", "assets/231a24aaad.webp"];
+const RUNNERS=["assets/6e3e9c78bc.webp", "assets/cb3ee1eb4a.webp", "assets/b35217bc0d.webp", "assets/a12eb9c32f.webp", "assets/9f71ba53c5.webp", "assets/f554d5ffa1.webp", "assets/74fda1679f.webp", "assets/d477fda605.webp", "assets/74c576175c.webp", "assets/7bfbd700ec.webp", "assets/9e8ad4ad06.webp", "assets/963226953b.webp", "assets/e26857267f.webp", "assets/5fc9ffc3d7.webp", "assets/b24207fecf.webp", "assets/c3fd30b49b.webp", "assets/fe6930b78b.webp", "assets/c8f61eaaaa.webp", "assets/fc10d63ced.webp", "assets/20bf2cfe2c.webp", "assets/d2a6dc4a2b.webp", "assets/925f140d5c.webp", "assets/5c1afb2740.webp", "assets/b550682e59.webp", "assets/3956f7c2c2.webp", "assets/d7f26c3fd7.webp", "assets/28a83dedd2.webp", "assets/e6a40314fa.webp", "assets/03db5e8339.webp", "assets/2b222dfb1f.webp", "assets/f1f6cf5946.webp", "assets/4e6cb5e8e9.webp", "assets/854ed52698.webp", "assets/10e7d1a3c6.webp", "assets/dfe4e2397c.webp", "assets/a3189eea9b.webp", "assets/892b06ef34.webp", "assets/eb8fe23580.webp", "assets/30d017dacd.webp", "assets/c14dc494b5.webp"];
+const $=id=>document.getElementById(id);
+const START_RATIO=.09,FINISH_RATIO=1-START_RATIO;
+const state={mode:'duck',count:100,duration:20,names:[],showNames:false,racers:[],running:false,paused:false,countdown:false,done:false,raf:0,startAt:0,pausedElapsed:0,countdownTimer:0,results:[],winner:false,lastNow:0};
+const rand=()=>{if(window.crypto&&crypto.getRandomValues){const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]/4294967296;}return Math.random();};
+const shuffle=a=>{const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[x[i],x[j]]=[x[j],x[i]];}return x;};
+const images={duck:DUCKS.map(src=>{const i=new Image();i.src=src;return i;}),runner:RUNNERS.map(src=>{const i=new Image();i.src=src;return i;})};
+const canvas=$('raceCanvas'),ctx=canvas.getContext('2d');
+let W=0,H=0,DPR=1,animClock=0;
+function toast(s){$('toast').textContent=s;$('toast').classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>$('toast').classList.remove('show'),1800);}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function formatTime(t){const hh=Math.floor(t/3600),mm=Math.floor(t/60)%60,ss=Math.floor(t%60);return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;}
+function resize(){
+ const oldW=W,oldH=H;
+ const r=$('stage').getBoundingClientRect();DPR=Math.min(window.devicePixelRatio||1,2);W=Math.max(1,r.width);H=Math.max(1,r.height);
+ canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);
+ if(state.racers.length&&oldW&&oldH){
+  state.racers.forEach(r=>{
+   r.startX=W*START_RATIO;
+   r.startY=(r.startYPct??.5)*H;
+   const p=state.running||state.paused?(r.progress||0):0;
+   r.x=r.startX+(W*FINISH_RATIO-r.startX)*p;
+   r.y=r.startY;
+  });
+ }
+ draw();
+}
+function fillCountOptions(){
+ const max=state.mode==='duck'?100:40;
+ const input=$('countInput');
+ input.min='2';input.max=String(max);input.value=String(Math.min(max,state.count));
+ input.setAttribute('aria-label',`Jumlah ${state.mode==='duck'?'bebek':'pelari'}`);
+}
+function getNames(){
+ const typed=$('namesInput').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+ return Array.from({length:state.count},(_,i)=>typed[i]||`Peserta ${String(i+1).padStart(2,'0')}`);
+}
+function resetRacers(){
+ const pool=state.mode==='duck'?images.duck:images.runner;
+ const order=shuffle(Array.from({length:pool.length},(_,i)=>i));
+ const top=Math.max(24,H*.045),bottom=Math.max(24,H*.045);
+ const usable=Math.max(1,H-top-bottom),spacing=usable/state.count;
+ const ySlots=shuffle(Array.from({length:state.count},(_,i)=>{
+  const jitter=(rand()-.5)*spacing*.38;
+  return Math.max(top,Math.min(H-bottom,top+(i+.5)*spacing+jitter));
+ }));
+ const startX=W*START_RATIO;
+ state.racers=getNames().map((name,i)=>{
+  const phase=rand()*Math.PI*2,startY=ySlots[i];
+  return {id:i+1,name,avatar:order[i%order.length],phase,startX,startY,startYPct:H?startY/H:.5,
+   finishTime:0,progress:0,finished:false,x:startX,y:startY,scale:1};
+ });
+ state.results=[];state.done=false;state.winner=false;
+ $('timer').textContent='00:00:00';$('timerCaption').textContent=state.mode==='duck'?'DUCK RACE':'RUNNER RACE';
+ $('winnerBanner').classList.remove('show');$('resultsOverlay').classList.add('hidden');
+ $('pauseBtn').textContent='Pause';$('pauseBtn').disabled=true;
+ draw();
+}
+function updateMode(){
+ $('duckMode').classList.toggle('active',state.mode==='duck');$('runnerMode').classList.toggle('active',state.mode==='runner');
+ $('stageLabel').textContent=state.mode==='duck'?'SWIM YOUR WAY TO THE FINISH LINE!':'RUN YOUR WAY TO THE FINISH LINE!';
+ fillCountOptions();$('timerCaption').textContent=state.mode==='duck'?'DUCK RACE':'RUNNER RACE';
+}
+function setMode(mode){
+ if(state.running||state.paused||state.countdown)return;
+ state.mode=mode;state.count=Math.min(state.count,mode==='duck'?100:40);
+ updateMode();resetRacers();
+}
+function setCount(n){
+ if(state.running||state.paused||state.countdown)return;
+ const max=state.mode==='duck'?100:40;
+ const value=Number(n);
+ if(!Number.isFinite(value)||n===''){$('countInput').value=String(state.count);return;}
+ state.count=Math.max(2,Math.min(max,Math.round(value)));
+ $('countInput').value=String(state.count);resetRacers();
+}
+function lockSettings(locked){
+ ['duckMode','runnerMode','countInput','durationSelect','namesBtn','labelModeBtn'].forEach(id=>$(id).disabled=locked);
+}
+function drawBackground(t){
+ const water=ctx.createLinearGradient(0,0,0,H);water.addColorStop(0,'#4ba2b7');water.addColorStop(.48,'#398da7');water.addColorStop(1,'#2b7d9b');
+ ctx.fillStyle=water;ctx.fillRect(0,0,W,H);
+ if(state.mode==='runner'){
+  const track=ctx.createLinearGradient(0,0,0,H);track.addColorStop(0,'#b95a60');track.addColorStop(.5,'#963f4c');track.addColorStop(1,'#71313f');
+  ctx.fillStyle=track;ctx.fillRect(0,0,W,H);
+  for(let i=0;i<8;i++){const y=(i+.5)*H/8;ctx.strokeStyle='rgba(255,255,255,.34)';ctx.lineWidth=2;ctx.setLineDash([24,16]);ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(255,255,255,.12)';ctx.fillRect(0,H*.02,W,2);ctx.fillRect(0,H*.98,W,2);
+ }else{
+  // Moving river bands and soft wave highlights.
+  for(let band=0;band<7;band++){
+   const y=H*(.10+band*.135)+(Math.sin(t*.55+band)*5);
+   ctx.beginPath();ctx.moveTo(0,y);
+   for(let x=0;x<=W+12;x+=12)ctx.lineTo(x,y+Math.sin(x*.018+t*1.05+band)*4+Math.sin(x*.042-t*.7)*1.5);
+   ctx.strokeStyle=band%2?'rgba(192,239,244,.18)':'rgba(10,91,125,.14)';ctx.lineWidth=band%2?7:10;ctx.stroke();
+  }
+ }
+ // River bank at the top, with grassy edge.
+ ctx.fillStyle='#6b492b';ctx.fillRect(0,0,W,13);
+ ctx.fillStyle='#9a6b3c';ctx.fillRect(0,8,W,5);
+ ctx.fillStyle='#15952c';ctx.fillRect(0,0,W,6);
+ for(let x=0;x<W;x+=17){ctx.fillStyle=x%2?'#2cbd3b':'#55d449';ctx.beginPath();ctx.moveTo(x,7);ctx.lineTo(x+4,0);ctx.lineTo(x+7,7);ctx.fill();}
+ // Subtle current foam and water glints.
+ for(let i=0;i<30;i++){
+  const x=((i*83+t*22)% (W+30))-15,y=(i*47)%H;
+  ctx.strokeStyle='rgba(222,255,255,.12)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+12,y+1);ctx.stroke();
+ }
+}
+function drawGate(x,label,mirror){
+  const tile=14,width=14,half=width/2,top=13;
+  ctx.save();
+  for(let y=top,row=0;y<H;y+=tile,row++){
+   for(let col=0;col<2;col++){
+    const c=mirror?1-col:col;
+    ctx.fillStyle=(row+c)%2===0?'#f8f8f8':'#141414';
+    ctx.fillRect(x-half+col*half,y,half,Math.min(tile,H-y));
+   }
+  }
+  ctx.strokeStyle='rgba(0,0,0,.65)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,H);ctx.stroke();
+  // Label pill: same size for START and FINISH, centered on the line, so both ends mirror each other.
+  ctx.font='bold 10px Arial';
+  const pw=Math.max(ctx.measureText('START').width,ctx.measureText('FINISH').width)+16,ph=16,px=x-pw/2,py=top+6;
+  ctx.fillStyle='rgba(16,30,40,.78)';roundRect(ctx,px,py,pw,ph,8);ctx.fill();
+  ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,x,py+ph/2+.5);
+  ctx.restore();
+ }
+ function drawStartLine(){drawGate(W*START_RATIO,'START',false);}
+ function drawFinish(){drawGate(W*FINISH_RATIO,'FINISH',true);}
+ function drawDuck(r,t){
+ const img=images.duck[r.avatar];if(!img||!img.complete||!img.naturalWidth)return;
+ const base=Math.max(44,Math.min(84,W/(state.count>70?22:state.count>35?17:13)));
+ const size=base*r.scale;
+ const h=size*.88,x=r.x,y=r.y+Math.sin(t*3.6+r.phase)*2.7;
+ // Ripple under the floating duck.
+ ctx.save();ctx.globalAlpha=.3;ctx.fillStyle='#d9fbff';ctx.beginPath();ctx.ellipse(x,y+h*.31,size*.46,Math.max(2,size*.075),0,0,Math.PI*2);ctx.fill();
+ ctx.globalAlpha=.2;ctx.strokeStyle='#e8ffff';ctx.lineWidth=1.1;ctx.beginPath();ctx.ellipse(x,y+h*.32,size*.62,size*.12,0,0,Math.PI*2);ctx.stroke();ctx.restore();
+ // Crop the very bottom of each supplied duck sprite so its feet sit below the water.
+ ctx.save();ctx.beginPath();ctx.rect(x-size*.52,y-h*.48,size*1.04,h*.84);ctx.clip();
+ ctx.drawImage(img,x-size*.5,y-h*.52,size,h);ctx.restore();
+ drawTag(r,x,y,size,'duck');
+}
+function drawRunner(r,t){
+ const img=images.runner[r.avatar];if(!img||!img.complete||!img.naturalWidth)return;
+ const frame=Math.floor(t*10+r.phase*2)%3,fw=img.naturalWidth/3,fh=img.naturalHeight;
+ const base=Math.max(50,Math.min(96,W/(state.count>30?16:11)));
+ const w=base*r.scale,h=w*1.16,x=r.x,y=r.y+Math.sin(t*8+r.phase)*1.2;
+ ctx.save();ctx.globalAlpha=.24;ctx.fillStyle='#311d21';ctx.beginPath();ctx.ellipse(x,y+h*.42,w*.35,3,0,0,Math.PI*2);ctx.fill();ctx.restore();
+ ctx.drawImage(img,frame*fw,0,fw,fh,x-w*.5,y-h*.5,w,h);
+ drawTag(r,x,y,w,'runner');
+}
+function drawTag(r,x,y,size,mode){
+ const text=state.showNames?r.name:String(r.id);
+ ctx.save();ctx.font=`bold ${Math.max(8,Math.min(11,size*.23))}px Arial`;
+ const max=state.showNames?Math.max(36,size*1.25):size*.58;
+ let label=text;while(ctx.measureText(label).width>max-9&&label.length>3)label=label.slice(0,-1);
+ if(label!==text)label+='…';
+ const tw=ctx.measureText(label).width,ww=Math.min(max,tw+9),hh=Math.max(13,size*.27);
+ const bx=x-ww*.5,by=y+size*(mode==='duck'?.14:-.35);
+ ctx.fillStyle='#fff';ctx.strokeStyle='#30343a';ctx.lineWidth=1.3;
+ roundRect(ctx,bx,by,ww,hh,4);ctx.fill();ctx.stroke();
+ ctx.fillStyle='#17212a';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,bx+ww/2,by+hh/2+.2);
+ ctx.restore();
+}
+function roundRect(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}
+function draw(){
+ if(!W||!H)return;
+ const t=state.running?(performance.now()-state.startAt)/1000:state.paused?state.pausedElapsed:animClock;
+ ctx.clearRect(0,0,W,H);drawBackground(t);drawStartLine();drawFinish();
+ const ordered=[...state.racers].sort((a,b)=>a.y-b.y);
+ ordered.forEach(r=>state.mode==='duck'?drawDuck(r,t):drawRunner(r,t));
+}
+function updateRace(now){
+ if(!state.running)return;
+ const elapsed=(now-state.startAt)/1000;$('timer').textContent=formatTime(elapsed);
+ let done=0,firstFinisher=null;
+ const finishX=W*FINISH_RATIO;
+ for(const r of state.racers){
+  const p=Math.min(1,elapsed/r.finishTime);r.progress=p;
+  r.x=r.startX+(finishX-r.startX)*p;
+  const bob=state.mode==='duck'?Math.sin(elapsed*3.4+r.phase)*Math.min(3,H*.004):Math.sin(elapsed*7+r.phase)*Math.min(2,H*.003);
+  r.y=Math.max(18,Math.min(H-18,r.startY+bob));
+  if(p>=1){
+   done++;r.finished=true;
+   if(!firstFinisher||r.finishTime<firstFinisher.finishTime)firstFinisher=r;
+  }
+ }
+ if(!state.winner&&firstFinisher){
+  state.winner=true;$('winnerName').textContent=firstFinisher.name;$('winnerBanner').classList.add('show');
+ }
+ draw();
+ if(done===state.racers.length){finishRace(elapsed);return;}
+ state.raf=requestAnimationFrame(updateRace);
+}
+function startRace(){
+ $('countdownOverlay').classList.add('hidden');state.countdown=false;state.running=true;state.paused=false;state.done=false;state.winner=false;
+ state.duration=Number($('durationSelect').value)||20;
+ state.racers.forEach(r=>{r.progress=0;r.finished=false;r.finishTime=state.duration*(.78+rand()*.22);r.x=r.startX;r.y=r.startY;});
+ state.startAt=performance.now();state.pausedElapsed=0;
+ lockSettings(true);$('raceAgainBtn').disabled=true;
+ $('pauseBtn').disabled=false;$('pauseBtn').textContent='Pause';$('timerCaption').textContent='RACE IN PROGRESS';
+ state.raf=requestAnimationFrame(updateRace);
+}
+function beginRace(){
+ if(state.running||state.countdown)return;
+ cancelAnimationFrame(state.raf);clearTimeout(state.countdownTimer);
+ state.running=false;state.paused=false;state.countdown=false;state.done=false;state.winner=false;state.pausedElapsed=0;
+ resetRacers();state.countdown=true;lockSettings(true);$('raceAgainBtn').disabled=true;
+ $('countdownOverlay').classList.remove('hidden');
+ let n=3;$('countdownNum').textContent='3';
+ const step=()=>{if(!state.countdown)return;n--;if(n>0){$('countdownNum').textContent=String(n);state.countdownTimer=setTimeout(step,600);}else{$('countdownNum').textContent='GO!';state.countdownTimer=setTimeout(startRace,350);}};
+ state.countdownTimer=setTimeout(step,600);
+}
+function pauseRace(){
+ if(state.running){
+  state.pausedElapsed=(performance.now()-state.startAt)/1000;state.running=false;state.paused=true;
+  cancelAnimationFrame(state.raf);$('pauseBtn').textContent='Continue';$('timerCaption').textContent='PAUSED';
+  $('raceAgainBtn').disabled=false;lockSettings(true);draw();
+ }else if(state.paused){
+  state.startAt=performance.now()-state.pausedElapsed*1000;state.running=true;state.paused=false;
+  $('pauseBtn').textContent='Pause';$('timerCaption').textContent='RACE IN PROGRESS';
+  $('raceAgainBtn').disabled=true;lockSettings(true);state.raf=requestAnimationFrame(updateRace);
+ }else if(!state.done&&!state.countdown){beginRace();}
+}
+function finishRace(elapsed){
+ state.running=false;state.paused=false;state.done=true;cancelAnimationFrame(state.raf);lockSettings(false);$('raceAgainBtn').disabled=false;
+ state.results=[...state.racers].sort((a,b)=>a.finishTime-b.finishTime);
+ $('pauseBtn').disabled=true;$('timerCaption').textContent='RACE FINISHED';
+ const [first,second,third]=state.results;
+ const winSrc=state.mode==='duck'?DUCKS[first.avatar]:RUNNERS[first.avatar];
+ $('winnerCard').innerHTML=`${state.mode==='duck'?`<img src="${winSrc}" alt="Winner">`:`<div class="winner-runner" style="background-image:url('${winSrc}')"></div>`}<div style="text-align:left"><small>🏆 THE WINNER</small><br><strong>${esc(first.name)}</strong><br><small>Participant ${first.id} · ${first.finishTime.toFixed(2)} sec</small></div>`;
+ $('podium').innerHTML=[first,second,third].filter(Boolean).map((r,i)=>`<div><b>${['🥇 1ST','🥈 2ND','🥉 3RD'][i]}</b><strong>${esc(r.name)}</strong><small>${r.finishTime.toFixed(2)} sec</small></div>`).join('');
+ $('resultList').innerHTML=state.results.map((r,i)=>`<div><b>${i+1}.</b> ${esc(r.name)} <small>· ${r.finishTime.toFixed(2)}s</small></div>`).join('');
+ $('resultSubtitle').textContent=`${state.count} ${state.mode==='duck'?'ducks':'runners'} finished the race.`;
+ $('resultsOverlay').classList.remove('hidden');
+}
+function clearRace(){
+ cancelAnimationFrame(state.raf);clearTimeout(state.countdownTimer);
+ state.running=false;state.paused=false;state.countdown=false;state.done=false;state.winner=false;state.pausedElapsed=0;
+ $('countdownOverlay').classList.add('hidden');$('resultsOverlay').classList.add('hidden');$('winnerBanner').classList.remove('show');
+ lockSettings(false);$('raceAgainBtn').disabled=false;
+ $('pauseBtn').disabled=true;$('pauseBtn').textContent='Pause';$('timerCaption').textContent='READY TO RACE';
+ resetRacers();
+}
+function exportCsv(){
+ if(!state.results.length)return;
+ const rows=[['Rank','Name','Participant','Time (seconds)']];
+ state.results.forEach((r,i)=>rows.push([i+1,r.name,r.id,r.finishTime.toFixed(2)]));
+ const csv=rows.map(row=>row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+ const a=document.createElement('a'),url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
+ a.href=url;a.download='race-results.csv';a.click();URL.revokeObjectURL(url);
+}
+$('duckMode').addEventListener('click',()=>setMode('duck'));
+$('runnerMode').addEventListener('click',()=>setMode('runner'));
+$('countInput').addEventListener('change',e=>setCount(e.target.value));
+$('countInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();setCount(e.target.value);e.target.blur();}});
+$('durationSelect').addEventListener('change',()=>{state.duration=Number($('durationSelect').value);});
+$('pauseBtn').addEventListener('click',pauseRace);
+$('clearBtn').addEventListener('click',clearRace);
+$('raceAgainBtn').addEventListener('click',beginRace);
+$('runAgainBtn').addEventListener('click',()=>{clearRace();beginRace();});
+$('closeResultsBtn').addEventListener('click',()=>$('resultsOverlay').classList.add('hidden'));
+$('exportBtn').addEventListener('click',exportCsv);
+$('namesBtn').addEventListener('click',()=>$('namesOverlay').classList.remove('hidden'));
+$('cancelNamesBtn').addEventListener('click',()=>$('namesOverlay').classList.add('hidden'));
+$('saveNamesBtn').addEventListener('click',()=>{$('namesOverlay').classList.add('hidden');resetRacers();toast('Names saved!');});
+$('labelModeBtn').addEventListener('click',()=>{state.showNames=!state.showNames;$('labelModeBtn').textContent=state.showNames?'Nama':'Nomor';draw();});
+$('fullscreenBtn').addEventListener('click',async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen();}catch(e){toast('Fullscreen tidak didukung browser ini.');}});
+window.addEventListener('resize',resize);
+window.addEventListener('keydown',e=>{const tg=e.target&&e.target.tagName;if(tg==='INPUT'||tg==='TEXTAREA'||tg==='SELECT'||tg==='BUTTON')return;if(e.code==='Space'){e.preventDefault();pauseRace();}else if(e.key&&e.key.toLowerCase()==='c')clearRace();});
+let lastIdleDraw=0;function idleLoop(now){if(!state.running&&!state.paused&&!state.countdown&&!state.done&&now-lastIdleDraw>45){animClock+=(now-lastIdleDraw)/1000;lastIdleDraw=now;draw();}requestAnimationFrame(idleLoop);}
+updateMode();fillCountOptions();$('countInput').value='100';resize();resetRacers();lockSettings(false);$('raceAgainBtn').disabled=false;idleLoop();
+</script>
+</body>
+</html>
